@@ -1,0 +1,11 @@
+{% extends 'lampadaire/base.html.twig' %}
+
+{% block content %}
+    <h2>Create new Lampadaire</h2>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+        <a href="{{ path('app_lampadaire_index') }}" class="btn btn-secondary">Back to list</a>
+    {{ form_end(form) }}
+{% endblock %}

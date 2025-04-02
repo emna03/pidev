@@ -1,0 +1,43 @@
+{% extends 'lampadaire/base.html.twig' %}
+
+{% block content %}
+    <a href="{{ path('app_lampadaire_new') }}" class="btn btn-primary mb-3">Create new</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Localisation</th>
+                <th>Etat</th>
+                <th>Consommation</th>
+                <th>Quartier ID</th>
+                <th>Installation Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for lampadaire in lampadaires %}
+            <tr>
+                <td>{{ lampadaire.id }}</td>
+                <td>{{ lampadaire.localisation }}</td>
+                <td>{{ lampadaire.etat ? 'On' : 'Off' }}</td>
+                <td>{{ lampadaire.consommation }}</td>
+                <td>{{ lampadaire.idQuartier }}</td>
+                <td>{{ lampadaire.dateInstallation ? lampadaire.dateInstallation|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_lampadaire_show', {'id': lampadaire.id}) }}" class="btn btn-sm btn-info">Show</a>
+                    <a href="{{ path('app_lampadaire_edit', {'id': lampadaire.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+                    <form method="post" action="{{ path('app_lampadaire_delete', {'id': lampadaire.id}) }}" onsubmit="return confirm('Are you sure?');" style="display: inline-block;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ lampadaire.id) }}">
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

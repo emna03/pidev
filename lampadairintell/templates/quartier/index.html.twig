@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quartiers{% endblock %}
+
+{% block body %}
+<h1>Quartiers</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Consommation Totale</th>
+            <th>Nombre de Lampadaires</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for quartier in quartiers %}
+            <tr>
+                <td>{{ quartier.id }}</td>
+                <td>{{ quartier.nom }}</td>
+                <td>{{ quartier.consomTot }}</td>
+                <td>{{ quartier.lampadaireCount }}</td>
+                <td>
+                    <a href="{{ path('app_quartier_edit', {'id': quartier.id}) }}">Edit</a>
+                    <form method="post" action="{{ path('app_quartier_delete', {'id': quartier.id}) }}" style="display: inline-block;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quartier.id) }}">
+                        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_quartier_new') }}">Create New Quartier</a>
+{% endblock %}
