@@ -13,7 +13,7 @@ class HelloWorldController extends AbstractController
     public function index(): Response
     {
         return $this->render('hello_world/index.html.twig', [
-            'message' => 'Hello World!',
+            'message' => 'Test Page Gestion Lampadaire Intelligente',
         ]);
     }
     
