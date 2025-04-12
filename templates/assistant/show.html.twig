@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Assistant Documentaire Details</h1>
+<p>Type: {{ assistant.typeAssistance }}</p>
+<p>Date: {{assistant.dateDemande ? assistant.dateDemande|date('Y-m-d') : ''}}</p>
+<p>Status: {{ assistant.status }}</p>
+<p>Remarque: {{ assistant.remarque }}</p>
+
+<a href="{{ path('assistantdocumentaire_edit', {'id': assistant.id}) }}">Edit</a>
+<a href="{{ path('assistantdocumentaire_index') }}" class="btn btn-secondary">Retour à la liste</a>
+
+{% endblock %}

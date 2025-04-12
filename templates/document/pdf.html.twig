@@ -1,0 +1,27 @@
+
+{% block body %}
+    <h1>Document Details</h1>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Nom du Document</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ document.nomDocument }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Chemin du Fichier</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ document.cheminFichier }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Date d'Émission</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ document.dateEmission|date('d/m/Y') }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Statut</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ document.status }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Remarque</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ document.remarque }}</td>
+        </tr>
+    </table>
+{% endblock %}
