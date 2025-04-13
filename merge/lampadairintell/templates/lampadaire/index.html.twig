@@ -1,0 +1,78 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Streetlight Management{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .table thead th {
+            white-space: nowrap;
+        }
+        .btn-sm {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="m-0">Streetlight Management</h2>
+            <a href="{{ path('app_lampadaire_new') }}" class="btn btn-primary">Add New Streetlight</a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if lampadaires|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Consumption</th>
+                                    <th scope="col">District ID</th>
+                                    <th scope="col">Installation Date</th>
+                                    <th scope="col" class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for lampadaire in lampadaires %}
+                                <tr>
+                                    <td>{{ lampadaire.id }}</td>
+                                    <td>{{ lampadaire.localisation }}</td>
+                                    <td>
+                                        <span class="badge {% if lampadaire.etat %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {{ lampadaire.etat ? 'On' : 'Off' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ lampadaire.consommation }} W</td>
+                                    <td>{{ lampadaire.idQuartier }}</td>
+                                    <td>{{ lampadaire.dateInstallation ? lampadaire.dateInstallation|date('Y-m-d') : 'N/A' }}</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="{{ path('app_lampadaire_show', {'id': lampadaire.id}) }}" class="btn btn-sm btn-outline-primary">Details</a>
+                                            <a href="{{ path('app_lampadaire_edit', {'id': lampadaire.id}) }}" class="btn btn-sm btn-outline-warning">Edit</a>
+                                            <form method="post" action="{{ path('app_lampadaire_delete', {'id': lampadaire.id}) }}" onsubmit="return confirm('Are you sure you want to delete this streetlight?');" class="d-inline">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ lampadaire.id) }}">
+                                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <p class="text-muted mb-3">No streetlights have been added yet.</p>
+                        <a href="{{ path('app_lampadaire_new') }}" class="btn btn-outline-primary">Add your first streetlight</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Lampadaire Details{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <h2 class="mb-4">Streetlight Details</h2>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td>{{ lampadaire.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Location</th>
+                            <td>{{ lampadaire.localisation }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>
+                                <span class="badge {% if lampadaire.etat %}bg-success{% else %}bg-secondary{% endif %}">
+                                    {{ lampadaire.etat ? 'On' : 'Off' }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Consumption</th>
+                            <td>{{ lampadaire.consommation }} W</td>
+                        </tr>
+                        <tr>
+                            <th>District ID</th>
+                            <td>{{ lampadaire.idQuartier }}</td>
+                        </tr>
+                        <tr>
+                            <th>Installation Date</th>
+                            <td>{{ lampadaire.dateInstallation ? lampadaire.dateInstallation|date('Y-m-d') : 'N/A' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-4 d-flex gap-2">
+                    <a href="{{ path('app_lampadaire_edit', {'id': lampadaire.id}) }}" class="btn btn-outline-warning">Edit</a>
+                    <a href="{{ path('app_lampadaire_index') }}" class="btn btn-outline-secondary">Back to list</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
