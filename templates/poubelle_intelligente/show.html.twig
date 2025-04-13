@@ -1,0 +1,192 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Détails Poubelle Intelligente{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .purple-theme {
+            background: linear-gradient(135deg, #f5f7ff 0%, #f5effb 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, #7e57c2 0%, #673ab7 100%);
+            color: white;
+            border: none;
+        }
+        
+        .btn-purple {
+            background-color: #673ab7;
+            border-color: #5e35b1;
+            color: white;
+        }
+        
+        .btn-purple:hover {
+            background-color: #5e35b1;
+            border-color: #512da8;
+            color: white;
+        }
+        
+        .btn-outline-purple {
+            color: #673ab7;
+            border-color: #673ab7;
+        }
+        
+        .btn-outline-purple:hover {
+            background-color: #673ab7;
+            color: white;
+        }
+        
+        .page-title {
+            color: #512da8;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #673ab7;
+            padding-bottom: 0.5rem;
+        }
+        
+        .detail-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(103, 58, 183, 0.1);
+            border: none;
+        }
+        
+        .detail-table {
+            margin-bottom: 0;
+        }
+        
+        .detail-table th {
+            width: 30%;
+            background-color: #f3e5f5;
+            color: #5e35b1;
+            font-weight: 600;
+        }
+        
+        .detail-table td {
+            background-color: white;
+        }
+        
+        .fill-level-high {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .fill-level-medium {
+            color: #ff8f00;
+            font-weight: bold;
+        }
+        
+        .fill-level-low {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        
+        .action-btn {
+            min-width: 120px;
+            margin: 0 5px;
+        }
+        
+        .badge-purple {
+            background-color: #673ab7;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="purple-theme">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="page-title">
+                    <i class="fas fa-trash-alt me-2"></i>Détails de la Poubelle Intelligente
+                </h1>
+            </div>
+        </div>
+        
+        <div class="card detail-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Informations de la Poubelle #{{ poubelle_intelligente.id }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table detail-table">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td>
+                                <span class="badge badge-purple">#{{ poubelle_intelligente.id }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Type de Déchets</th>
+                            <td>{{ poubelle_intelligente.typeDechets }}</td>
+                        </tr>
+                        <tr>
+                            <th>Niveau de Remplissage</th>
+                            <td>
+                                {% if poubelle_intelligente.niveauRemplissage > 80 %}
+                                    <span class="fill-level-high">{{ poubelle_intelligente.niveauRemplissage }}% <i class="fas fa-exclamation-triangle"></i></span>
+                                {% elseif poubelle_intelligente.niveauRemplissage > 50 %}
+                                    <span class="fill-level-medium">{{ poubelle_intelligente.niveauRemplissage }}%</span>
+                                {% else %}
+                                    <span class="fill-level-low">{{ poubelle_intelligente.niveauRemplissage }}%</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Localisation</th>
+                            <td>{{ poubelle_intelligente.localisation }}</td>
+                        </tr>
+                        <tr>
+                            <th>Coordonnées GPS</th>
+                            <td>
+                                <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                                {{ poubelle_intelligente.latitude|number_format(6) }}, {{ poubelle_intelligente.longitude|number_format(6) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Zone</th>
+                            <td>{{ poubelle_intelligente.zoneId }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-between">
+            <a href="{{ path('app_poubelle_intelligente_index') }}" class="btn btn-outline-purple action-btn">
+                <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+            </a>
+            
+            <div>
+                <a href="{{ path('app_poubelle_intelligente_edit', {'id': poubelle_intelligente.id}) }}" 
+                   class="btn btn-purple action-btn">
+                    <i class="fas fa-edit me-2"></i>Modifier
+                </a>
+                
+                <form method="post" action="{{ path('app_poubelle_intelligente_delete', {'id': poubelle_intelligente.id}) }}" 
+                      class="d-inline-block">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ poubelle_intelligente.id) }}">
+                    <button class="btn btn-danger action-btn"
+                            onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette poubelle?')">
+                        <i class="fas fa-trash-alt me-2"></i>Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any custom JS if needed
+        });
+    </script>
+{% endblock %}

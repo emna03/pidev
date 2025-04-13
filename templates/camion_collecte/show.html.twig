@@ -1,0 +1,213 @@
+{# templates/camion_collecte/show.html.twig #}
+
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Détails du Camion: {{ camion_collecte.modele }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .purple-theme {
+            background: linear-gradient(135deg, #f5f7ff 0%, #f5effb 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, #7e57c2 0%, #673ab7 100%);
+            color: white;
+            border: none;
+        }
+        
+        .btn-purple {
+            background-color: #673ab7;
+            border-color: #5e35b1;
+            color: white;
+        }
+        
+        .btn-purple:hover {
+            background-color: #5e35b1;
+            border-color: #512da8;
+            color: white;
+        }
+        
+        .btn-outline-purple {
+            color: #673ab7;
+            border-color: #673ab7;
+        }
+        
+        .btn-outline-purple:hover {
+            background-color: #673ab7;
+            color: white;
+        }
+        
+        .page-title {
+            color: #512da8;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #673ab7;
+            padding-bottom: 0.5rem;
+        }
+        
+        .detail-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        
+        .detail-table th {
+            background-color: #f3e5f5;
+            color: #512da8;
+            width: 30%;
+            padding: 1rem;
+            border-bottom: 1px solid #e1bee7;
+        }
+        
+        .detail-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e1bee7;
+            background-color: white;
+        }
+        
+        .detail-table tr:last-child th,
+        .detail-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .status-active {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        
+        .status-inactive {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .status-maintenance {
+            color: #ff8f00;
+            font-weight: bold;
+        }
+        
+        .badge-purple {
+            background-color: #673ab7;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="purple-theme">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="page-title">
+                    <i class="fas fa-truck me-2"></i>Détails du Camion
+                </h1>
+            </div>
+        </div>
+        
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>{{ camion_collecte.modele }} ({{ camion_collecte.immatriculation }})
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table detail-table">
+                        <tbody>
+                            <tr>
+                                <th>ID</th>
+                                <td><span class="badge badge-purple">#{{ camion_collecte.id }}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Modèle</th>
+                                <td><strong>{{ camion_collecte.modele }}</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Immatriculation</th>
+                                <td>{{ camion_collecte.immatriculation }}</td>
+                            </tr>
+                            <tr>
+                                <th>Capacité maximale</th>
+                                <td>{{ camion_collecte.capaciteMax }} kg</td>
+                            </tr>
+                            <tr>
+                                <th>Statut</th>
+                                <td>
+                                    {% if camion_collecte.statut == 'Actif' %}
+                                        <span class="status-active">{{ camion_collecte.statut }}</span>
+                                    {% elseif camion_collecte.statut == 'En maintenance' %}
+                                        <span class="status-maintenance">{{ camion_collecte.statut }}</span>
+                                    {% else %}
+                                        <span class="status-inactive">{{ camion_collecte.statut }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Zone assignée</th>
+                                <td>{{ camion_collecte.zoneId }}</td>
+                            </tr>
+                            <tr>
+                                <th>Kilométrage</th>
+                                <td>{{ camion_collecte.kilometrage }} km</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ path('app_camion_collecte_index') }}" class="btn btn-outline-purple">
+                        <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                    </a>
+                    <div class="btn-group">
+                        <a href="{{ path('app_camion_collecte_edit', {'id': camion_collecte.id}) }}" class="btn btn-purple">
+                            <i class="fas fa-edit me-2"></i>Modifier
+                        </a>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fas fa-trash-alt me-2"></i>Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmation de suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer ce camion de collecte? Cette action est irréversible.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Annuler
+                </button>
+                <form method="post" action="{{ path('app_camion_collecte_delete', {'id': camion_collecte.id}) }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camion_collecte.id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt me-2"></i>Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize any needed JavaScript
+        });
+    </script>
+{% endblock %}
