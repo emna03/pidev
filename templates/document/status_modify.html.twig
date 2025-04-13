@@ -1,0 +1,33 @@
+{% extends 'baseback.html.twig' %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4">Modifier le Statut du Document</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <p><strong>Nom du Document :</strong> {{ document.nomDocument }}</p>
+            <p><strong>Statut Actuel :</strong> {{ document.status }}</p>
+
+            {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form_row(form.status, {
+                            'attr': {'class': 'form-select'}
+                        }) }}
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                    <a href="{{ path('document_index_back') }}" class="btn btn-secondary ms-2">
+                        Annuler
+                    </a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
