@@ -82,4 +82,25 @@ class LampadaireController extends AbstractController
 
         return $this->redirectToRoute('app_lampadaire_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/citoyen', name: 'citizen_lampadaire_index', methods: ['GET'])]
+public function citizenIndex(EntityManagerInterface $entityManager): Response
+{
+    $lampadaires = $entityManager
+        ->getRepository(Lampadaire::class)
+        ->findAll();
+
+    return $this->render('lampadaire/indexc.html.twig', [
+        'lampadaires' => $lampadaires,
+    ]);
+}
+
+#[Route('/citoyen/lampadaires/{id}', name: 'citizen_lampadaire_show', methods: ['GET'])]
+public function citizenShow(Lampadaire $lampadaire): Response
+{
+    return $this->render('lampadaire/showc.html.twig', [
+        'lampadaire' => $lampadaire,
+    ]);
+}
+
 }

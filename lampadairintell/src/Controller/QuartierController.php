@@ -70,4 +70,27 @@ class QuartierController extends AbstractController
 
         return $this->redirectToRoute('app_quartier_index');
     }
+
+    #[Route('/show-all', name: 'app_quartier_show_all', methods: ['GET'])]
+public function showAll(QuartierRepository $quartierRepository): Response
+{
+    return $this->render('quartier/show_all.html.twig', [
+        'quartiers' => $quartierRepository->findAll(),
+    ]);
+}
+#[Route('/show/{id}', name: 'app_quartier_show', methods: ['GET'])]
+public function show(Quartier $quartier, EntityManagerInterface $entityManager): Response
+{
+    $lampCount = $entityManager->getConnection()->fetchOne(
+        'SELECT COUNT(*) FROM lampadaire WHERE id_quartier = :id',
+        ['id' => $quartier->getId()]
+    );
+
+    return $this->render('quartier/show.html.twig', [
+        'quartier' => $quartier,
+        'lampCount' => $lampCount,
+    ]);
+}
+
+
 }

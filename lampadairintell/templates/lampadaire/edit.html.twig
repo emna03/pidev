@@ -1,13 +1,25 @@
-{% extends 'lampadaire/base.html.twig' %}
+{% extends 'baseBack.html.twig' %}
 
-{% block content %}
-    <h2>Edit Lampadaire</h2>
+{% block title %}Edit Lampadaire{% endblock %}
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-success">{{ button_label|default('Update') }}</button>
-        <a href="{{ path('app_lampadaire_index') }}" class="btn btn-secondary">Back to list</a>
-    {{ form_end(form) }}
+{% block body %}
+    <div class="container py-4">
+        <h2 class="mb-4">Edit Streetlight</h2>
 
-    {{ include('lampadaire/_delete_form.html.twig') }}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <div class="mt-3">
+                        <button class="btn btn-success">{{ button_label|default('Update') }}</button>
+                        <a href="{{ path('app_lampadaire_index') }}" class="btn btn-secondary">Back to list</a>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="mt-4">
+            {{ include('lampadaire/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

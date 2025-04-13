@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Quartier{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">Détails du Quartier</h1>
+
+<div class="card">
+    <div class="card-header">
+        Quartier n°{{ quartier.id }}
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tbody>
+               
+                <tr>
+                    <th scope="row">Nom</th>
+                    <td>{{ quartier.nom ?? 'Non spécifié' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Description</th>
+                    <td>{{ quartier.description ?? 'Aucune description' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Nombre de lampadaires</th>
+                    <td>{{ lampCount }}</td>
+                </tr>
+                
+            </tbody>
+        </table>
+        <a href="{{ path('app_quartier_show_all') }}" class="btn btn-secondary mt-3">← Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}
