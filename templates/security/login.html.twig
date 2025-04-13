@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+        {{ include('security/login_styles.css.twig') }}
+    </style>
+</head>
+<body>
+
+<div class="background">
+    <div class="shape"></div>
+    <div class="shape"></div>
+</div>
+
+
+<form method="post" action="{{ path('app_login') }}">
+   <div class="form-header">
+
+        <h3>Login Here</h3>
+    </div>
+    {% if error %}
+        <div style="color:red; text-align:center; margin-bottom: 10px;">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+        
+
+    <label for="email">Email</label>
+    <input type="email" id="inputEmail" name="email" placeholder="Email" value="{{ last_username }}">
+
+    <label for="password">Password</label>
+    <input type="password" id="inputPassword" name="password" placeholder="Password">
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    <button type="submit">Log In</button>
+  <div class="form-full">
+      <p>Vous n'avez pas  un compte ? <a href="{{ path('app_register') }}" style="color: #00f;">Cree un compte </a>.</p>
+    </div>
+    <div class="social">
+        <div class="go"><i class="fab fa-google"></i> Google</div>
+        <div class="fb"><i class="fab fa-facebook"></i> Facebook</div>
+    </div>
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const emailInput = document.getElementById("inputEmail");
+    const passwordInput = document.getElementById("inputPassword");
+
+    form.addEventListener("submit", function (e) {
+      let valid = true;
+
+      // Nettoyer les anciens messages
+      const errors = document.querySelectorAll(".error-message");
+      errors.forEach(el => el.remove());
+
+      // Vérifier email
+      const emailValue = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailValue)) {
+        showError(emailInput, "Adresse email invalide");
+        valid = false;
+      }
+
+      // Vérifier mot de passe
+      const passwordValue = passwordInput.value.trim();
+      if (passwordValue.length < 6) {
+        showError(passwordInput, "Mot de passe trop court (min 6 caractères)");
+        valid = false;
+      }
+
+      if (!valid) {
+        e.preventDefault(); // empêcher la soumission du formulaire
+      }
+    });
+
+    function showError(inputElement, message) {
+      const div = document.createElement("div");
+      div.className = "error-message";
+      div.style.color = "red";
+      div.style.fontSize = "13px";
+      div.style.marginTop = "4px";
+      div.innerText = message;
+      inputElement.parentNode.insertBefore(div, inputElement.nextSibling);
+    }
+  });
+</script>
+<script>
+  window.addEventListener("load", function () {
+    document.body.classList.add("loaded");
+  });
+  window.addEventListener("load", function () {
+  document.body.classList.add("loaded");
+  document.querySelector("form")?.classList.add("fade-in");
+});
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const logos = document.querySelectorAll(".floating-logo");
+
+    logos.forEach(logo => {
+      const randomX = Math.floor(Math.random() * window.innerWidth);
+      const randomDelay = Math.random() * 5;
+
+      logo.style.left = `${randomX}px`;
+      logo.style.animationDelay = `${randomDelay}s`;
+    });
+  });
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+{{ form_start(form, {'attr': {'class': 'custom-form'}}) }}
+    <div class="row">
+        {% for field in form %}
+            {% if field.vars.name != '_token' %}
+                <div class="col-12 mb-3">
+                    {{ form_label(field, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                    {{ form_widget(field, {'attr': {'class': 'form-control rounded-3 py-2'}}) }}
+                    {{ form_errors(field) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="text-end">
+        <button class="btn btn-success px-5 py-3 rounded-pill shadow-lg transition-all duration-300 hover:bg-success-dark">
+            {{ button_label|default('Enregistrer') }}
+        </button>
+
+    </div>
+{{ form_end(form) }}
+<style>
+.custom-form .form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.custom-form .form-control {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.custom-form .form-control:focus {
+    border-color: #00a8ff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 168, 255, 0.1);
+}
+
+.custom-form .btn-primary {
+    background-color: #00a8ff;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.custom-form .btn-primary:hover {
+    background-color: #008ccf;
+}
+.btn-custom {
+    background-color: #28a745; /* Green color */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px; /* Pill shape */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #218838; /* Darker green */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+</style>
