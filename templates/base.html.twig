@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mon Site{% endblock %}</title>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+
+    {% include 'shared/header.html.twig' %}
+
+    <main class="container my-5">
+        {% block body %}{% endblock %}
+    </main>
+
+    {% include 'shared/footer.html.twig' %}
+
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

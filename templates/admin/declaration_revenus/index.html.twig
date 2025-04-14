@@ -1,0 +1,110 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Gestion des Déclarations de Revenus{% endblock %}
+
+{% block stylesheet %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .admin-card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .admin-card-header {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table thead th {
+            background-color: #f1f3f5;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .btn-view {
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-view:hover {
+            background-color: #574b90;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="card admin-card">
+        <div class="admin-card-header">
+            <h2>💼 Gestion des Déclarations de Revenus</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Montant (€)</th>
+                            <th>Source</th>
+                            <th>Date</th>
+                            <th>Preuve</th>
+                            <th>Dossier</th>
+                            <th>Utilisateur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for declaration in declarations %}
+                            <tr>
+                                <td>{{ declaration.id }}</td>
+                                <td>{{ declaration.montantRevenu }}</td>
+                                <td>{{ declaration.sourceRevenu }}</td>
+                                <td>{{ declaration.dateDeclaration }}</td>
+                                <td>
+                                    {% if declaration.preuveRevenu %}
+                                        <a href="{{ asset(declaration.preuveRevenu) }}" target="_blank" class="btn btn-view">
+                                            Voir
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Aucune</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ declaration.idDossier ? declaration.idDossier.id : 'N/A' }}
+                                </td>
+                                <td>
+                                    {{ declaration.user.nom }} {{ declaration.user.prenom }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center">Aucune déclaration trouvée.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
