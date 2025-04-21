@@ -17,22 +17,26 @@
                         <span class="badge bg-secondary text-uppercase mb-2">Année {{ dossier_fiscale.anneeFiscale }}</span>
                         <h5 class="card-title text-dark">Statut : {{ dossier_fiscale.status }}</h5>
                         <p class="card-text text-3-5 mb-1">
-                            <strong>Total Impôt :</strong> {{ dossier_fiscale.totalImpot }}<br>
-                            <strong>Payé :</strong> {{ dossier_fiscale.totalImpotPaye }}<br>
+                            <strong>Total Impôt :</strong> {{ dossier_fiscale.totalImpot }} TND<br>
+                            <strong>Payé :</strong> {{ dossier_fiscale.totalImpotPaye }} TND<br>
                             <strong>Créé le :</strong> {{ dossier_fiscale.dateCreation }}<br>
                             <strong>Paiement :</strong> {{ dossier_fiscale.moyenPayement }}
                         </p>
                         <div class="mt-3">
                             <a href="{{ path('app_dossier_fiscale_show', {'id': dossier_fiscale.id}) }}" class="btn btn-sm btn-primary me-2">Voir</a>
+
+                            {% if dossier_fiscale.totalImpot > dossier_fiscale.totalImpotPaye %}
+                                <button class="btn btn-sm btn-success" onclick="window.location.href='{{ path('app_dossier_fiscale_paiement', { token: dossier_fiscale.token }) }}'">
+                                    Payer ici
+                                </button>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
             </div>
-        {% else %}
-            <div class="col-12">
-                <div class="alert alert-warning text-center">Aucun dossier trouvé pour le moment.</div>
-            </div>
         {% endfor %}
+
     </div>  
 </div>
 

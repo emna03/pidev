@@ -35,7 +35,7 @@ class DeclarationRevenus
     #[ORM\Column(length: 255)]
         private ?string $preuve_revenu = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist'])]
     private ?DossierFiscale $dossier = null;
 
     #[ORM\ManyToOne]
@@ -120,4 +120,14 @@ class DeclarationRevenus
 
         return $this;
     }
+    public function getDossier(): ?DossierFiscale
+{
+    return $this->dossier;
+}
+
+public function setDossier(?DossierFiscale $dossier): static
+{
+    $this->dossier = $dossier;
+    return $this;
+}
 }

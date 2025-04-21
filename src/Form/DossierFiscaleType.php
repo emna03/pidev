@@ -15,20 +15,20 @@ class DossierFiscaleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('annee_fiscale')
-            ->add('total_impot')
-            ->add('total_impot_paye')
-            ->add('status')
-            ->add('moyen_payement')
-            ->add('id_declaration', EntityType::class, [
-                'class' => DeclarationRevenus::class,
-'choice_label' => 'id',
+            ->add('annee_fiscale', null, [
+                'disabled' => true,
+            ])
+            ->add('total_impot', null, [
+                'disabled' => true,
+            ])
+            ->add('status', null, [
+                'disabled' => true,
             ])
             ->add('user', EntityType::class, [
                 'class' => Utilisateur::class,
-'choice_label' => 'id',
-            ])
-        ;
+                'choice_label' => 'nom',
+                'disabled' => true,
+            ]); 
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -3,10 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\DossierFiscaleRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: DossierFiscaleRepository::class)]
 class DossierFiscale
 {
@@ -33,8 +32,6 @@ class DossierFiscale
     private ?float $total_impot = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: "Le total de l'impôt payé est obligatoire.")]
-    #[Assert\Positive(message: "Le total de l'impôt payé doit être un nombre positif.")]
     private ?float $total_impot_paye = null;
 
     #[ORM\Column(length: 255)]
@@ -47,15 +44,22 @@ class DossierFiscale
     private ?string $date_creation = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: "Le moyen de paiement est obligatoire.")]
     private ?string $moyen_payement = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?DeclarationRevenus $declaration = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
+
     // Getters and Setters
 
+    public function __construct()
+    {
+        $this->token = Uuid::v4()->toRfc4122();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -168,4 +172,26 @@ class DossierFiscale
 
         return $this;
     }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+    public function getDeclaration(): ?DeclarationRevenus
+{
+    return $this->declaration;
+}
+
+public function setDeclaration(?DeclarationRevenus $declaration): static
+{
+    $this->declaration = $declaration;
+    return $this;
+}
 }

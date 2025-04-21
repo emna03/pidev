@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TentativeFraude{% endblock %}
+
+{% block body %}
+    <h1>Create new TentativeFraude</h1>
+
+    {{ include('tentative_fraude/_form.html.twig') }}
+
+    <a href="{{ path('app_tentative_fraude_index') }}">back to list</a>
+{% endblock %}

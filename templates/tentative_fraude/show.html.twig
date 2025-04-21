@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TentativeFraude{% endblock %}
+
+{% block body %}
+    <h1>TentativeFraude</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ tentative_fraude.id }}</td>
+            </tr>
+            <tr>
+                <th>Type_fraude</th>
+                <td>{{ tentative_fraude.typeFraude }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tentative_fraude_index') }}">back to list</a>
+
+    <a href="{{ path('app_tentative_fraude_edit', {'id': tentative_fraude.id}) }}">edit</a>
+
+    {{ include('tentative_fraude/_delete_form.html.twig') }}
+{% endblock %}
