@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ data.titre }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+        }
+        .header img {
+            width: 120px;
+            margin-bottom: 15px;
+        }
+        .header h1 {
+            color: #007bff;
+            font-size: 24px;
+            margin: 0;
+        }
+        .header p {
+            margin: 5px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .content {
+            margin-top: 30px;
+        }
+        .field {
+            margin: 15px 0;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .field strong {
+            color: #333;
+            width: 180px;
+            display: inline-block;
+        }
+        .field span {
+            color: #555;
+            font-size: 14px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #007bff;
+            text-align: center;
+            color: #777;
+            font-size: 12px;
+        }
+        .signature {
+            margin-top: 60px;
+            text-align: right;
+            padding-right: 20px;
+            font-style: italic;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Logo and Title -->
+        <div class="header">
+            <!-- Replace with your logo path -->
+            <img src="{{ absolute_url(asset('logo.png')) }}" alt="Logo"> 
+            <h1>{{ data.titre }}</h1>
+            <p>République Tunisienne<br>Ministère de l'Intérieur</p>
+        </div>
+
+        <!-- Content Section -->
+        <div class="content">
+            <div class="field">
+                <strong>Nom:</strong> <span>{{ data.nom }}</span>
+            </div>
+            <div class="field">
+                <strong>Prénom:</strong> <span>{{ data.prenom }}</span>
+            </div>
+            <div class="field">
+                <strong>Date de Naissance:</strong> <span>{{ data.date_naissance }}</span>
+            </div>
+            <div class="field">
+                <strong>Nationalité:</strong> <span>{{ data.nationalite }}</span>
+            </div>
+            <div class="field">
+                <strong>Description:</strong> <span>{{ data.description }}</span>
+            </div>
+        </div>
+
+        <!-- Signature Section -->
+        <div class="signature">
+            Signature: ___________________<br>
+            Date: {{ "now"|date("d/m/Y") }}
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Ce document est généré automatiquement. Pour toute réclamation, contactez <a href="mailto:contact@tunis.gov.tn">contact@tunis.gov.tn</a>.
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+
+{% block body %}
+    <h1>Assistant Documentaire Details</h1>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Type d'Assistance</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ assistant.typeAssistance }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Date de Demande</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ assistant.dateDemande|date('d/m/Y H:i') }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Statut</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ assistant.status }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Remarque</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ assistant.remarque }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Rappel Automatique</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ assistant.isRappelAutomatique ? 'Oui' : 'Non' }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Utilisateur</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ assistant.utilisateur.email ?? 'N/A' }}</td>
+        </tr>
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 8px; background-color: #f4f4f4;">Document Administratif</th>
+            <td style="border: 1px solid #ddd; padding: 8px;">{{ assistant.document.nomDocument ?? 'N/A' }}</td>
+        </tr>
+    </table>
+{% endblock %}

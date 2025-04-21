@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="container mt-4">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h1 class="mb-4">generate pdf prompt Documents Administratifs</h1>
+</div>
+<form id="pdf-form">
+    <textarea id="pdf-content" class="form-control" rows="10" placeholder="Enter structured text here..."></textarea>
+    <button type="button" class="btn btn-primary mt-3" onclick="generatePdf()">Generate PDF</button>
+</form>
+<script src="{{ asset('js/prompt.js') }}"></script>
+
+{% endblock %}

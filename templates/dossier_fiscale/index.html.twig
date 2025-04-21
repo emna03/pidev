@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<title>DossierFiscale index</title>
+
+{% block body %}
+    <h1>DossierFiscale index</h1>
+<body><!-- Déclaration de Revenus Details -->
+<div class="mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <span class="badge bg-gradient-light-primary-rgba-20 text-secondary rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-4">
+                    <span class="d-inline-flex py-1 px-2">Déclaration</span>
+                </span>
+                <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Vue d’Ensemble</h2>
+                <p>La déclaration de revenus permet aux citoyens de soumettre leurs informations financières annuelles, garantissant transparence et conformité avec les obligations fiscales. Cette section centralise les données importantes pour une gestion efficace des impôts.</p>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-6 mb-4 mb-lg-0 pe-lg-5">
+                <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Notre Objectif</h2>
+                <p>Nous facilitons la déclaration en ligne avec un formulaire intuitif, un traitement sécurisé et une gestion automatisée des calculs fiscaux. L'utilisateur peut joindre des justificatifs, visualiser ses précédentes déclarations et suivre l’évolution de sa situation fiscale.</p>
+                <p>Un système d’alerte intelligent informe les citoyens des échéances importantes, des anomalies détectées ou des documents manquants, assurant une expérience fluide et conforme.</p>
+            </div>
+
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Résultats Attendus</h2>
+                <ul class="list list-icons list-icons-lg list-icons-style-3 text-3-5">
+                    <li><i class="fas fa-check bg-color-dark-rgba-10 text-color-before-secondary"></i> Simplification du processus de déclaration.</li>
+                    <li><i class="fas fa-check bg-color-dark-rgba-10 text-color-before-secondary"></i> Meilleure précision des informations fiscales.</li>
+                    <li><i class="fas fa-check bg-color-dark-rgba-10 text-color-before-secondary"></i> Gain de temps pour les citoyens et l’administration.</li>
+                </ul>
+
+                <div class="appear-animation mt-4" data-appear-animation="blurIn" data-appear-animation-delay="300">
+                    <div class="d-flex align-items-center pt-4">
+                        <strong class="d-inline-flex text-12 text-dark n-ls-5">95%</strong>
+                        <div class="p-2 ps-3">
+                            <img src="img/demos/accounting-1/icons/icon-4.svg" width="48" alt="" data-icon data-plugin-options="{'onlySVG': true, 'extraClass': 'svg-fill-color-primary'}" />
+                        </div>
+                    </div>
+                    <span class="custom-font-tertiary text-7 text-dark n-ls-1 fst-italic">Conformité Améliorée</span>
+                    <p class="mb-0 pt-2 text-3-5 line-height-7">Grâce à l'automatisation et au suivi intelligent des déclarations fiscales.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Annee_fiscale</th>
+                <th>Total_impot</th>
+                <th>Total_impot_paye</th>
+                <th>Status</th>
+                <th>Date_creation</th>
+                <th>Moyen_payement</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for dossier_fiscale in dossier_fiscales %}
+            <tr>
+                <td>{{ dossier_fiscale.anneeFiscale }}</td>
+                <td>{{ dossier_fiscale.totalImpot }}</td>
+                <td>{{ dossier_fiscale.totalImpotPaye }}</td>
+                <td>{{ dossier_fiscale.status }}</td>
+                <td>{{ dossier_fiscale.dateCreation }}</td>
+                <td>{{ dossier_fiscale.moyenPayement }}</td>
+                <td>
+                    <a href="{{ path('app_dossier_fiscale_show', {'id': dossier_fiscale.id}) }}">show</a>
+                    <a href="{{ path('app_dossier_fiscale_edit', {'id': dossier_fiscale.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_dossier_fiscale_new') }}">Create new</a>
+{% endblock %}

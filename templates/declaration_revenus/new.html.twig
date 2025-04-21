@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+{{ include('shared/header.html.twig') }}
+<div class="body">    
+    <div role="main" class="main px-3 px-lg-5">
+
+        <div class="page-header py-0 px-3 px-xl-0 border-radius-2 p-relative mb-5" style="background-color:rgb(166, 146, 253)">
+            <div class="overflow-hidden p-absolute top-0 left-0 bottom-0 h-100 w-100">
+                <div class="custom-el-5 custom-pos-4">
+                    <img class="img-fluid opacity-2 opacity-hover-2" src="{{ asset('img/demos/accounting-1/svg/waves.svg') }}" alt="">
+                </div>
+            </div>                    
+            <div class="container p-relative z-index-1 py-2">
+                <div class="row align-items-center py-4">
+                    <div class="col-8 col-md-7">
+                        <div class="appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="0">
+                            <span class="badge bg-color-dark-rgba-10 text-light rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-3"><span class="d-inline-flex py-1 px-2">page</span></span>
+                        </div>
+                        <div class="appear-animation" data-appear-animation="fadeIn" data-appear-animation-delay="200">
+                            <h1 class="text-dark text-9 text-lg-12 font-weight-semibold line-height-1 mb-2">Ajouter Une Déclaration</h1>
+                        </div>
+                        <div class="appear-animation" data-appear-animation="fadeIn" data-appear-animation-delay="200">
+                            <ul class="breadcrumb d-flex text-3-5 font-weight-semi-bold pb-2 mb-3">
+                                <li><a href="demo-accounting-1.html" class="text-dark text-decoration-none">Home</a></li>
+                                <li><a href="{{path('app_declaration_revenus_index')}}" class="text-dark text-decoration-none">Service Fiscale</a></li>
+
+                                <li class="active">Ajouter une déclaration</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+<title>Nouvelle Déclaration de Revenus</title>
+
+<body>
+    <div class="body">
+        <div role="main" class="main px-3 px-lg-5">
+            <div class="container mt-5">
+                <div class="row mb-4">
+                    <div class="col">
+                        <h1 class="text-dark fw-bold">Nouvelle Déclaration</h1>
+                    </div>
+                    <div class="col text-end">
+                        <a href="{{ path('app_declaration_revenus_index') }}" class="btn btn-outline-secondary shadow-sm">← Retour à la liste</a>
+                    </div>
+                </div>
+                <div class="card shadow-sm p-4 border-0 rounded-4">
+                    {{ include('declaration_revenus/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <span class="badge bg-gradient-light-primary-rgba-20 text-secondary rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-4">
+                        <span class="d-inline-flex py-1 px-2">Conseils</span>
+                    </span>
+                    <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Avant de Soumettre</h2>
+                    <p>Assurez-vous d’avoir rempli tous les champs obligatoires. Joignez un document justificatif valide si requis. Une fois la déclaration envoyée, vous pourrez la consulter ou la modifier depuis la liste.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+{{ include('shared/footer.html.twig') }}

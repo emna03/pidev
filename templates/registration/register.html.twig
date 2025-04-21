@@ -1,0 +1,368 @@
+<!-- Partie HEAD -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Créer un compte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #080710;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .background {
+      width: 300px;
+      height: 400px;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+    }
+
+    .background .shape {
+      height: 150px;
+      width: 150px;
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .shape:first-child {
+      background: linear-gradient(#1845ad, #23a2f6);
+      left: -60px;
+      top: -60px;
+    }
+
+    .shape:last-child {
+      background: linear-gradient(to right, #ff512f, #f09819);
+      right: -20px;
+      bottom: -60px;
+    }
+
+   .container {
+  width: 360px;
+  background-color: rgba(255, 255, 255, 0.13);
+  position: relative;
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 30px rgba(8, 7, 16, 0.6);
+  padding: 30px 25px;
+  color: #fff;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+    .fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    form * {
+      font-family: 'Poppins', sans-serif;
+      letter-spacing: 0.5px;
+      outline: none;
+      border: none;
+    }
+
+    h3 {
+      font-size: 22px;
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 13px;
+      margin-top: 15px;
+      display: block;
+    }
+
+    input {
+      height: 40px;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.07);
+      border-radius: 3px;
+      padding: 0 8px;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #fff;
+    }
+
+    input[type="password"] {
+      letter-spacing: 1px;
+    }
+
+    .password-strength {
+      height: 6px;
+      width: 100%;
+      background: #333;
+      border-radius: 5px;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .password-strength div {
+      height: 100%;
+      width: 0%;
+      background-color: red;
+      transition: width 0.3s ease;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    button {
+      margin-top: 24px;
+      width: 100%;
+      background-color: #fff;
+      color: #080710;
+      padding: 10px 0;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ddd;
+    }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .step {
+      text-align: center;
+    }
+
+    .circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #ccc;
+      color: white;
+      line-height: 30px;
+      font-weight: bold;
+      margin: 0 auto;
+    }
+
+    .step.active .circle {
+      background-color: #4caf50;
+    }
+
+    .step p {
+      margin-top: 6px;
+      font-size: 13px;
+      color: white;
+    }
+
+    .line {
+      width: 60px;
+      height: 3px;
+      background-color: #ccc;
+      margin: 0 10px;
+    }
+
+    .step.active + .line {
+      background-color: #4caf50;
+    }
+
+    p {
+      font-size: 13px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    a {
+      color: #00f;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+     @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.6s ease forwards;
+  }
+  </style>
+</head>
+<body>
+
+<div class="background">
+  <div class="shape"></div>
+  <div class="shape"></div>
+</div>
+
+<div class="container fade-in">
+  <h3>Créer un compte</h3>
+
+  <div class="progress-container">
+    <div class="step active">
+      <div class="circle">1</div>
+      <p>Compte</p>
+    </div>
+    <div class="line"></div>
+    <div class="step">
+      <div class="circle">2</div>
+      <p>Profil</p>
+    </div>
+  </div>
+
+  {{ form_start(registrationForm, {'attr': {'id': 'registerForm', 'novalidate': 'novalidate'}}) }}
+
+  <label for="registration_form_email">Email</label>
+  {{ form_widget(registrationForm.email, {'attr': {'id': 'registration_form_email'}}) }}
+  {% if registrationForm.email.vars.errors|length > 0 %}
+    <div class="error-message">{{ registrationForm.email.vars.errors.0.message }}</div>
+  {% endif %}
+
+  <label for="registration_form_plainPassword">Mot de passe</label>
+  {{ form_widget(registrationForm.plainPassword, {'attr': {'id': 'registration_form_plainPassword'}}) }}
+  <div class="password-strength"><div id="strengthBar"></div></div>
+
+  <label for="confirm_password">Confirmer le mot de passe</label>
+  <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirmer le mot de passe">
+
+  {{ form_row(registrationForm.agreeTerms) }}
+
+  <button type="submit">S'inscrire</button>
+
+  <p>Vous avez déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a></p>
+
+
+  {{ form_end(registrationForm) }}
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Ajout de l'animation de fade-in pour la page
+    const container = document.querySelector(".container");
+    container.classList.add("fade-in");
+  
+    // Sélection des éléments du formulaire
+    const form = document.getElementById("registerForm");
+    const email = document.getElementById("registration_form_email");
+    const password = document.getElementById("registration_form_plainPassword");
+    const confirm = document.getElementById("confirm_password");
+    const strengthBar = document.getElementById("strengthBar");
+  
+    // Ajout d'un élément pour afficher le feedback de la force du mot de passe
+    const feedback = document.createElement("div");
+    feedback.style.marginTop = "6px";
+    feedback.style.fontSize = "13px";
+    feedback.style.color = "#fff";
+    password.parentNode.insertBefore(feedback, strengthBar.nextSibling);
+  
+    // Fonction pour valider l'email
+    function validateEmail(emailVal) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+    }
+  
+    // Fonction pour afficher un message d'erreur
+    function showError(input, message) {
+      const error = document.createElement("div");
+      error.className = "error-message";
+      error.innerText = message;
+      input.parentNode.insertBefore(error, input.nextSibling);
+    }
+  
+    // Gestionnaire d'événement pour la soumission du formulaire
+    form.addEventListener("submit", function (e) {
+      // Suppression des messages d'erreur existants
+      document.querySelectorAll('.error-message').forEach(el => el.remove());
+      let valid = true;
+  
+      // Validation de l'email
+      if (!validateEmail(email.value.trim())) {
+        showError(email, "Email invalide");
+        valid = false;
+      }
+  
+      // Validation de la longueur du mot de passe
+      if (password.value.length < 6) {
+        showError(password, "Mot de passe trop court");
+        valid = false;
+      }
+  
+      // Validation de la correspondance des mots de passe
+      if (password.value !== confirm.value) {
+        showError(confirm, "Les mots de passe ne correspondent pas");
+        valid = false;
+      }
+  
+      // Empêcher la soumission si le formulaire n'est pas valide
+      if (!valid) e.preventDefault();
+    });
+  
+    // Gestionnaire d'événement pour la force du mot de passe
+    password.addEventListener("input", () => {
+      const val = password.value;
+      let strength = 0;
+  
+      // Critères de force du mot de passe
+      if (val.length >= 8) strength++;
+      if (val.match(/[a-z]/)) strength++;
+      if (val.match(/[A-Z]/)) strength++;
+      if (val.match(/[0-9]/)) strength++;
+      if (val.match(/[^a-zA-Z0-9]/)) strength++;
+  
+      // Calcul du pourcentage de force
+      const percent = (strength / 5) * 100;
+      strengthBar.style.width = percent + "%";
+      strengthBar.style.backgroundColor = percent < 40 ? "red" : percent < 80 ? "orange" : "limegreen";
+  
+      // Mise à jour du feedback
+      if (percent < 40) {
+        feedback.textContent = "Force : Faible";
+      } else if (percent < 80) {
+        feedback.textContent = "Force : Moyenne";
+      } else {
+        feedback.textContent = "Force : Forte";
+      }
+  
+      // Réinitialisation si le champ est vide
+      if (val === "") {
+        strengthBar.style.width = "0%";
+        feedback.textContent = "";
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
