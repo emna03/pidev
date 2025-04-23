@@ -31,9 +31,13 @@
                             <td>{{ lampadaire.consommation }} W</td>
                         </tr>
                         <tr>
-                            <th>District ID</th>
-                            <td>{{ lampadaire.idQuartier }}</td>
-                        </tr>
+                    
+                            <tr>
+                                <th>District</th>
+                                <td>{{ lampadaire.quartier.nom }}</td>
+                            </tr>
+                            
+                       
                         <tr>
                             <th>Installation Date</th>
                             <td>{{ lampadaire.dateInstallation ? lampadaire.dateInstallation|date('Y-m-d') : 'N/A' }}</td>

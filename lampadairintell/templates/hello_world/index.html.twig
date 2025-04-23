@@ -1,31 +1,41 @@
-{# templates/hello_world/index.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}test Page lampadaire{% endblock %}
 
 {% block body %}
-    <h1>{{ message }}</h1>
+    <h1 style="text-align: center;">{{ message }}</h1>
 
-    <a href="{{ path('app_lampadaire_index') }}" class="btn btn-primary">Go to Lampadaire</a>
-    <a href="{{ path('app_quartier_index') }}" class="btn btn-secondary">Go to Quartier</a>
+    <div class="button-container">
+        <a href="{{ path('citizen_lampadaire_index') }}" class="btn btn-primary">Go to Lampadaire</a>
+        <a href="{{ path('app_quartier_show_all') }}" class="btn btn-secondary">Go to Quartier</a>
+    </div>
 
     <style>
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 15px; /* espace entre les boutons */
+        }
+        
+
         .btn {
-            display: inline-block;
-            margin: 10px 10px 0 0;
             padding: 10px 20px;
             font-size: 16px;
             text-decoration: none;
             color: #fff;
             border-radius: 5px;
         }
+
         .btn-primary {
             background-color: #007bff;
         }
+
         .btn-secondary {
             background-color: #6c757d;
         }
+
         .btn:hover {
             opacity: 0.9;
         }

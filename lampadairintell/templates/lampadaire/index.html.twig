@@ -22,6 +22,27 @@
             <a href="{{ path('app_lampadaire_new') }}" class="btn btn-primary">Add New Streetlight</a>
         </div>
 
+        <!-- 🔍 Barre de filtre par date -->
+        <form method="get" class="row g-3 align-items-end mb-4">
+            <div class="col-md-3">
+                <label for="date" class="form-label fw-bold">Installation Date:</label>
+                <input type="date" id="date" name="date" class="form-control" value="{{ selectedDate }}">
+            </div>
+            <div class="col-md-3">
+                <label for="mode" class="form-label fw-bold">Filter Mode:</label>
+                <select id="mode" name="mode" class="form-select">
+                    <option value="">-- Choose --</option>
+                    <option value="before" {% if selectedMode == 'before' %}selected{% endif %}>Before</option>
+                    <option value="after" {% if selectedMode == 'after' %}selected{% endif %}>After</option>
+                    <option value="on" {% if selectedMode == 'on' %}selected{% endif %}>On</option>
+                </select>
+            </div>
+            <div class="col-md-auto d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Apply Filter</button>
+                <a href="{{ path('app_lampadaire_index') }}" class="btn btn-secondary">Reset</a>
+            </div>
+        </form>
+
         <div class="card shadow-sm">
             <div class="card-body">
                 {% if lampadaires|length > 0 %}
@@ -33,7 +54,7 @@
                                     <th scope="col">Location</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Consumption</th>
-                                    <th scope="col">District ID</th>
+                                    <th scope="col">District</th>
                                     <th scope="col">Installation Date</th>
                                     <th scope="col" class="text-center">Actions</th>
                                 </tr>
@@ -49,7 +70,7 @@
                                         </span>
                                     </td>
                                     <td>{{ lampadaire.consommation }} W</td>
-                                    <td>{{ lampadaire.idQuartier }}</td>
+                                    <td>{{ lampadaire.quartier.nom }}</td>
                                     <td>{{ lampadaire.dateInstallation ? lampadaire.dateInstallation|date('Y-m-d') : 'N/A' }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
@@ -68,7 +89,7 @@
                     </div>
                 {% else %}
                     <div class="text-center py-5">
-                        <p class="text-muted mb-3">No streetlights have been added yet.</p>
+                        <p class="text-muted mb-3">No streetlights found for the selected filter.</p>
                         <a href="{{ path('app_lampadaire_new') }}" class="btn btn-outline-primary">Add your first streetlight</a>
                     </div>
                 {% endif %}

@@ -21,6 +21,14 @@
                     <td>{{ lampadaire.localisation }}</td>
                 </tr>
                 <tr>
+                    <th scope="row">Quartier</th>
+                    <td>{{ lampadaire.quartier.nom ?? 'Non spécifié' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Date d'installation</th>
+                    <td>{{ lampadaire.dateInstallation|date('d/m/Y') }}</td>
+                </tr>
+                <tr>
                     <th scope="row">État</th>
                     <td>
                         {% if lampadaire.etat %}
@@ -34,7 +42,6 @@
                     <th scope="row">Consommation</th>
                     <td>{{ lampadaire.consommation }} kWh</td>
                 </tr>
-            
             </tbody>
         </table>
         <a href="{{ path('citizen_lampadaire_index') }}" class="btn btn-secondary">← Retour à la liste</a>

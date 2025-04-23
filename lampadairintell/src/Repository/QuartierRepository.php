@@ -13,16 +13,10 @@ class QuartierRepository extends ServiceEntityRepository
         parent::__construct($registry, Quartier::class);
     }
 
-    /**
-     * Fetch all quartiers with their lampadaire counts and total consumption.
-     *
-     * @return Quartier[]
-     */
     public function findAllWithLampadaireData(): array
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        // Fetch lampadaire counts and total consumption grouped by quartier
         $sql = '
             SELECT id_quartier, COUNT(*) AS lamp_count, SUM(consommation) AS total_consumption
             FROM lampadaire
@@ -31,7 +25,6 @@ class QuartierRepository extends ServiceEntityRepository
         $stmt = $conn->executeQuery($sql);
         $lampadaireData = $stmt->fetchAllAssociative();
 
-        // Map the data by quartier ID for easier access
         $lampadaireStats = [];
         foreach ($lampadaireData as $data) {
             $lampadaireStats[(int) $data['id_quartier']] = [
@@ -40,21 +33,25 @@ class QuartierRepository extends ServiceEntityRepository
             ];
         }
 
-        // Fetch all quartiers
         $quartiers = $this->findAll();
 
-        // Add lampadaire data to each quartier
         foreach ($quartiers as $quartier) {
-            $quartierId = $quartier->getId();
-            if (isset($lampadaireStats[$quartierId])) {
-                $quartier->setLampadaireCount($lampadaireStats[$quartierId]['lamp_count']);
-                $quartier->setConsomTot($lampadaireStats[$quartierId]['total_consumption']);
-            } else {
-                $quartier->setLampadaireCount(0);
-                $quartier->setConsomTot(0.0);
-            }
+            $id = $quartier->getId();
+            $quartier->setLampadaireCount($lampadaireStats[$id]['lamp_count'] ?? 0);
+            $quartier->setConsomTot($lampadaireStats[$id]['total_consumption'] ?? 0.0);
         }
 
         return $quartiers;
+    }
+
+    public function findWithFilters(string $search, float $min, float $max): array
+    {
+        $quartiers = $this->findAllWithLampadaireData();
+
+        return array_filter($quartiers, function ($quartier) use ($search, $min, $max) {
+            return str_contains(strtolower($quartier->getNom()), strtolower($search))
+                && $quartier->getConsomTot() >= $min
+                && $quartier->getConsomTot() <= $max;
+        });
     }
 }

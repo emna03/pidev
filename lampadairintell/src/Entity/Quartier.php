@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\QuartierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: 'App\Repository\QuartierRepository')]
+#[ORM\Entity(repositoryClass: QuartierRepository::class)]
 #[ORM\Table(name: 'quartier')]
 class Quartier
 {
@@ -44,6 +45,15 @@ class Quartier
     #[Assert\PositiveOrZero(message: "Le nombre de lampadaires ne peut pas être négatif")]
     private ?int $lampadaireCount = 0;
 
+    // ✅ Relation ajoutée
+    #[ORM\OneToMany(mappedBy: 'quartier', targetEntity: Lampadaire::class)]
+    private Collection $lampadaires;
+
+    public function __construct()
+    {
+        $this->lampadaires = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,6 +89,32 @@ class Quartier
     public function setLampadaireCount(int $count): void
     {
         $this->lampadaireCount = $count;
+    }
+
+    public function getLampadaires(): Collection
+    {
+        return $this->lampadaires;
+    }
+
+    public function addLampadaire(Lampadaire $lampadaire): self
+    {
+        if (!$this->lampadaires->contains($lampadaire)) {
+            $this->lampadaires[] = $lampadaire;
+            $lampadaire->setQuartier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLampadaire(Lampadaire $lampadaire): self
+    {
+        if ($this->lampadaires->removeElement($lampadaire)) {
+            if ($lampadaire->getQuartier() === $this) {
+                $lampadaire->setQuartier(null);
+            }
+        }
+
+        return $this;
     }
 
     public function __toString(): string

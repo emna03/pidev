@@ -1,0 +1,86 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        canvas {
+            max-width: 600px;
+            margin: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container py-4">
+    <h1 class="mb-4 text-center">📊 Statistiques Générales</h1>
+
+    <div class="row text-center mb-4">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Total des lampadaires</h5>
+                    <p class="fs-4">{{ total }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Actifs</h5>
+                    <p class="fs-4 text-success">{{ actifs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Inactifs</h5>
+                    <p class="fs-4 text-danger">{{ inactifs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Consommation Moyenne</h5>
+                    <p class="fs-4">{{ moyenne|number_format(2) }} kWh</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center mt-5">🔌 Consommation par Quartier</h3>
+    <canvas id="consoChart" height="120"></canvas>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('consoChart').getContext('2d');
+        const consoChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ consoParQuartier|map(c => c.quartier)|json_encode()|raw }},
+                datasets: [{
+                    label: 'Consommation (kWh)',
+                    data: {{ consoParQuartier|map(c => c.total)|json_encode()|raw }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

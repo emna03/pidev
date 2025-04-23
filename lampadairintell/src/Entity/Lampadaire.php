@@ -1,13 +1,12 @@
 <?php
-// src/Entity/Lampadaire.php
 
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Repository\LampadaireRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: LampadaireRepository::class)]
 #[ORM\Table(name: 'lampadaire')]
 class Lampadaire
 {
@@ -44,11 +43,10 @@ class Lampadaire
     )]
     private $consommation;
 
-    #[ORM\Column(name: 'id_quartier', type: 'integer')]
-    #[Assert\NotBlank(message: "L'ID du quartier est obligatoire")]
-    #[Assert\Type(type: 'integer', message: "L'ID du quartier doit être un nombre entier")]
-    #[Assert\Positive(message: "L'ID du quartier doit être un nombre positif")]
-    private $idQuartier;
+    #[ORM\ManyToOne(targetEntity: Quartier::class, inversedBy: 'lampadaires')]
+    #[ORM\JoinColumn(name: 'id_quartier', referencedColumnName: 'id', nullable: false)]
+    #[Assert\NotNull(message: "Le quartier est obligatoire")]
+    private ?Quartier $quartier = null;
 
     #[ORM\Column(name: 'date_installation', type: 'date')]
     #[Assert\NotBlank(message: "La date d'installation est obligatoire")]
@@ -65,7 +63,6 @@ class Lampadaire
 
     public function __construct()
     {
-        // Valeurs par défaut
         $this->etat = false;
         $this->dateInstallation = new \DateTime();
     }
@@ -108,14 +105,14 @@ class Lampadaire
         return $this;
     }
 
-    public function getIdQuartier(): ?int
+    public function getQuartier(): ?Quartier
     {
-        return $this->idQuartier;
+        return $this->quartier;
     }
 
-    public function setIdQuartier(int $idQuartier): self
+    public function setQuartier(?Quartier $quartier): self
     {
-        $this->idQuartier = $idQuartier;
+        $this->quartier = $quartier;
         return $this;
     }
 
@@ -133,13 +130,13 @@ class Lampadaire
     public function __toString(): string
     {
         return sprintf(
-            'Lampadaire{id=%d, localisation="%s", etat=%s, consommation=%.2f, id_quartier=%d, date_installation=%s}',
+            'Lampadaire{id=%d, localisation="%s", etat=%s, consommation=%.2f, quartier=%s, date_installation=%s}',
             $this->id,
             $this->localisation,
             $this->etat ? 'true' : 'false',
             $this->consommation,
-            $this->idQuartier,
-            $this->dateInstallation ? $this->dateInstallation->format('Y-m-d') : 'null'
+            $this->quartier?->getNom() ?? 'N/A',
+            $this->dateInstallation?->format('Y-m-d') ?? 'null'
         );
     }
 }

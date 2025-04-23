@@ -1,34 +1,137 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Détails du Quartier</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .clickable-row {
+            cursor: pointer;
+        }
+        .clickable-row:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <h2 class="text-center mb-5">Détails du Quartier</h2>
 
-{% block title %}Détails du Quartier{% endblock %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title">Quartier n°1</h4>
+                <table class="table table-bordered mt-3">
+                    <tbody>
+                        <tr><th>Nom</th><td>Quartier Central</td></tr>
+                        <tr><th>Consommation Totale</th><td>1500 kWh</td></tr>
+                    </tbody>
+                </table>
+                <a href="/quartier" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+            </div>
+        </div>
 
-{% block body %}
-<h1 class="mb-4">Détails du Quartier</h1>
+        <div class="card mb-5">
+            <div class="card-body">
+                <h4 class="card-title">Liste des Lampadaires (cliquez pour localiser)</h4>
+                <table class="table table-hover mt-3">
+                    <thead>
+                        <tr>
+                            <th>Localisation</th>
+                            <th>Consommation</th>
+                            <th>État</th>
+                            <th>Date d'installation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="clickable-row"
+                            data-localisation="Avenue Habib Bourguiba, Tunis"
+                            data-consommation="150"
+                            data-etat="Actif">
+                            <td>Avenue Habib Bourguiba, Tunis</td>
+                            <td>150 kWh</td>
+                            <td>
+                                <span class="badge bg-success">Actif</span>
+                            </td>
+                            <td>15/03/2022</td>
+                        </tr>
+                        <tr class="clickable-row"
+                            data-localisation="Rue de Marseille, Tunis"
+                            data-consommation="120"
+                            data-etat="Actif">
+                            <td>Rue de Marseille, Tunis</td>
+                            <td>120 kWh</td>
+                            <td>
+                                <span class="badge bg-success">Actif</span>
+                            </td>
+                            <td>22/05/2021</td>
+                        </tr>
+                        <tr class="clickable-row"
+                            data-localisation="Place de la Victoire, Tunis"
+                            data-consommation="180"
+                            data-etat="Inactif">
+                            <td>Place de la Victoire, Tunis</td>
+                            <td>180 kWh</td>
+                            <td>
+                                <span class="badge bg-danger">Inactif</span>
+                            </td>
+                            <td>10/11/2020</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-<div class="card">
-    <div class="card-header">
-        Quartier n°{{ quartier.id }}
+        <h3 class="text-center mb-4">Carte des Lampadaires</h3>
+        <div id="map" style="height: 400px; border-radius: 8px;"></div>
     </div>
-    <div class="card-body">
-        <table class="table table-bordered">
-            <tbody>
-               
-                <tr>
-                    <th scope="row">Nom</th>
-                    <td>{{ quartier.nom ?? 'Non spécifié' }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Description</th>
-                    <td>{{ quartier.description ?? 'Aucune description' }}</td>
-                </tr>
-                <tr>
-                    <th scope="row">Nombre de lampadaires</th>
-                    <td>{{ lampCount }}</td>
-                </tr>
-                
-            </tbody>
-        </table>
-        <a href="{{ path('app_quartier_show_all') }}" class="btn btn-secondary mt-3">← Retour à la liste</a>
-    </div>
-</div>
-{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const mapContainer = document.getElementById('map');
+
+        if (mapContainer) {
+            const map = L.map('map').setView([36.8065, 10.1815], 13);
+            let currentMarker = null;
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            document.querySelectorAll('.clickable-row').forEach(row => {
+                row.addEventListener('click', () => {
+                    const localisation = row.dataset.localisation;
+                    const consommation = row.dataset.consommation;
+                    const etat = row.dataset.etat;
+
+                    const query = encodeURIComponent(localisation);
+                    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length > 0) {
+                                const lat = data[0].lat;
+                                const lon = data[0].lon;
+
+                                if (currentMarker) {
+                                    map.removeLayer(currentMarker);
+                                }
+
+                                currentMarker = L.marker([lat, lon]).addTo(map)
+                                    .bindPopup(`<strong>${localisation}</strong><br>Conso: ${consommation} kWh<br>État: ${etat}`)
+                                    .openPopup();
+
+                                map.setView([lat, lon], 16);
+                            } else {
+                                alert("Adresse non trouvée : " + localisation);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Erreur lors du géocodage :", error);
+                        });
+                });
+            });
+        }
+    </script>
+</body>
+</html>

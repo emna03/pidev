@@ -13,14 +13,23 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/quartier')]
 class QuartierController extends AbstractController
-{
-    #[Route('/', name: 'app_quartier_index', methods: ['GET'])]
-    public function index(QuartierRepository $quartierRepository): Response
+{#[Route('/', name: 'app_quartier_index', methods: ['GET'])]
+    public function index(Request $request, QuartierRepository $quartierRepository): Response
     {
+        $search = $request->query->get('search', '');
+        $min = (float) $request->query->get('min', 0);
+        $max = (float) $request->query->get('max', 5000);
+    
+        $quartiers = $quartierRepository->findWithFilters($search, $min, $max);
+    
         return $this->render('quartier/index.html.twig', [
-            'quartiers' => $quartierRepository->findAllWithLampadaireData(),
+            'quartiers' => $quartiers,
+            'search' => $search,
+            'min' => $min,
+            'max' => $max,
         ]);
     }
+    
 
     #[Route('/new', name: 'app_quartier_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -70,25 +79,48 @@ class QuartierController extends AbstractController
 
         return $this->redirectToRoute('app_quartier_index');
     }
-
     #[Route('/show-all', name: 'app_quartier_show_all', methods: ['GET'])]
-public function showAll(QuartierRepository $quartierRepository): Response
-{
-    return $this->render('quartier/show_all.html.twig', [
-        'quartiers' => $quartierRepository->findAll(),
-    ]);
-}
+    public function showAll(Request $request, QuartierRepository $quartierRepository): Response
+    {
+        $search = $request->query->get('search', '');
+        $min = (float) $request->query->get('min', 0);
+        $max = (float) $request->query->get('max', 5000);
+    
+        $quartiers = $quartierRepository->findWithFilters($search, $min, $max);
+    
+        return $this->render('quartier/show_all.html.twig', [
+            'quartiers' => $quartiers,
+            'search' => $search,
+            'min' => $min,
+            'max' => $max,
+        ]);
+    }
+    
 #[Route('/show/{id}', name: 'app_quartier_show', methods: ['GET'])]
 public function show(Quartier $quartier, EntityManagerInterface $entityManager): Response
 {
-    $lampCount = $entityManager->getConnection()->fetchOne(
-        'SELECT COUNT(*) FROM lampadaire WHERE id_quartier = :id',
-        ['id' => $quartier->getId()]
-    );
+    $lampadaires = $entityManager->getRepository(\App\Entity\Lampadaire::class)
+        ->findBy(['quartier' => $quartier]);
 
     return $this->render('quartier/show.html.twig', [
         'quartier' => $quartier,
-        'lampCount' => $lampCount,
+        'lampadaires' => $lampadaires,
+    ]);
+}
+
+
+
+
+    
+#[Route('/showA/{id}', name: 'app_quartier_showA', methods: ['GET'])]
+public function showA(Quartier $quartier, EntityManagerInterface $entityManager): Response
+{
+    $lampadaires = $entityManager->getRepository(\App\Entity\Lampadaire::class)
+        ->findBy(['quartier' => $quartier]);
+
+    return $this->render('quartier/showA.html.twig', [
+        'quartier' => $quartier,
+        'lampadaires' => $lampadaires,
     ]);
 }
 
