@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+{{ include('shared/header.html.twig') }}
+{{include('shared/declaration_slider.html.twig')}}
+
+<title>Declaration de Revenus</title>
+
+<body>
+
+<!-- templates/declaration_revenus/index.html.twig -->
+
+    <div class="body">
+
+        <div role="main" class="main px-3 px-lg-5">
+            <div class="container mt-5">
+                <div class="row mb-4">
+                    <div class="col">
+                        <h1 class="text-dark fw-bold">Mes Déclarations</h1>
+                    </div>
+                    <div class="col text-end">
+                        <a href="{{ path('app_declaration_revenus_new') }}" class="btn btn-primary shadow-sm">+ Nouvelle Déclaration</a>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <div class="table-responsive">
+                    <table class="table table-bordered table-hover shadow-sm" style="font-size: 1.05rem; border-radius: 0.75rem; overflow: hidden;">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th class="py-3">Montant Revenu</th>
+                                <th class="py-3">Source Revenu</th>
+                                <th class="py-3">Date Déclaration</th>
+                                <th class="py-3">Preuve Revenu</th>
+                                <th class="py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for declaration_revenu in declaration_revenuses %}
+                            <tr class="align-middle text-center">
+                                <td class="py-3">{{ declaration_revenu.montantRevenu }}</td>
+                                <td class="py-3">{{ declaration_revenu.sourceRevenu }}</td>
+                                <td class="py-3">{{ declaration_revenu.dateDeclaration|date('Y-m-d') }}</td>
+                                <td class="py-3">
+                                    {% if declaration_revenu.preuveRevenu %}
+                                        <a href="{{ asset(declaration_revenu.preuveRevenu) }}" target="_blank" class="btn btn-sm btn-outline-info">Voir</a>
+                                    {% else %}
+                                        <span class="text-muted">Aucune</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3">
+                                    <a href="{{ path('app_declaration_revenus_show', {'id': declaration_revenu.id}) }}" class="btn btn-sm btn-outline-dark me-1">Voir</a>
+                                    {% set today = "now"|date("Y-m-d") %}
+                                    {% set fifteenDaysAgo = date("-15 days")|date("Y-m-d") %}
+                                    {% set declarationDate = declaration_revenu.dateDeclaration|date("Y-m-d") %}
+
+                                    {% if declarationDate >= fifteenDaysAgo and declarationDate <= today %}
+                                        <a href="{{ path('app_declaration_revenus_edit', {'id': declaration_revenu.id}) }}" class="btn btn-sm btn-outline-primary me-1">Modifier</a>
+                                    {% endif %}
+                                    
+
+
+                                    {% if declaration_revenu.dossier is null %}
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteModal"
+                                                data-id="{{ declaration_revenu.id }}"
+                                                data-token="{{ csrf_token('delete' ~ declaration_revenu.id) }}">
+                                            Supprimer
+                                        </button>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">Aucun enregistrement trouvé.</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content shadow rounded-4">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirmation de suppression</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        Êtes-vous sûr de vouloir supprimer cette déclaration ?
+                    </div>
+                    <div class="modal-footer">
+                        <form id="deleteForm" method="post" action="">
+                        <input type="hidden" name="_token" id="deleteToken" value="">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-outline-danger">Supprimer</button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<div class="mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <span class="badge bg-gradient-light-primary-rgba-20 text-secondary rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-4">
+                    <span class="d-inline-flex py-1 px-2">Details</span>
+                </span>
+                <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Vue d’Ensemble</h2>
+                <p>La déclaration de revenus permet aux citoyens de soumettre leurs informations financières annuelles, garantissant transparence et conformité avec les obligations fiscales. Cette section centralise les données importantes pour une gestion efficace des impôts.</p>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-6 mb-4 mb-lg-0 pe-lg-5">
+                <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Notre Objectif</h2>
+                <p>Nous facilitons la déclaration en ligne avec un formulaire intuitif, un traitement sécurisé et une gestion automatisée des calculs fiscaux. L'utilisateur peut joindre des justificatifs, visualiser ses précédentes déclarations et suivre l’évolution de sa situation fiscale.</p>
+                <p>Un système d’alerte intelligent informe les citoyens des échéances importantes, des anomalies détectées ou des documents manquants, assurant une expérience fluide et conforme.</p>
+            </div>
+
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Résultats Attendus</h2>
+                <ul class="list list-icons list-icons-lg list-icons-style-3 text-3-5">
+                    <li><i class="fas fa-check bg-color-dark-rgba-10 text-color-before-secondary"></i> Simplification du processus de déclaration.</li>
+                    <li><i class="fas fa-check bg-color-dark-rgba-10 text-color-before-secondary"></i> Meilleure précision des informations fiscales.</li>
+                    <li><i class="fas fa-check bg-color-dark-rgba-10 text-color-before-secondary"></i> Gain de temps pour les citoyens et l’administration.</li>
+                </ul>
+
+                <div class="appear-animation mt-4" data-appear-animation="blurIn" data-appear-animation-delay="300">
+                    <div class="d-flex align-items-center pt-4">
+                        <strong class="d-inline-flex text-12 text-dark n-ls-5">95%</strong>
+                        <div class="p-2 ps-3">
+                            <img src="img/demos/accounting-1/icons/icon-4.svg" width="48" alt="" data-icon data-plugin-options="{'onlySVG': true, 'extraClass': 'svg-fill-color-primary'}" />
+                        </div>
+                    </div>
+                    <span class="custom-font-tertiary text-7 text-dark n-ls-1 fst-italic">Conformité Améliorée</span>
+                    <p class="mb-0 pt-2 text-3-5 line-height-7">Grâce à l'automatisation et au suivi intelligent des déclarations fiscales.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+{{ include('shared/footer.html.twig') }}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const token = button.getAttribute('data-token');
+
+            const form = document.getElementById('deleteForm');
+            const tokenInput = document.getElementById('deleteToken');
+
+            form.action = '{{ path("app_declaration_revenus_delete", {"id": "ID_REPLACE"}) }}'.replace('ID_REPLACE', id);
+            tokenInput.value = token;
+        });
+    });
+</script>
+<!-- templates/declaration_revenus/index.html.twig -->

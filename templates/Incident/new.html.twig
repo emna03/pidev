@@ -1,0 +1,75 @@
+
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div class="body">    
+    <div role="main" class="main px-3 px-lg-5">
+<div class="container mt-5">
+        <div class="page-header py-0 px-3 px-xl-0 border-radius-2 p-relative mb-5" style="background-color:rgb(166, 146, 253)">
+            <div class="overflow-hidden p-absolute top-0 left-0 bottom-0 h-100 w-100">
+                <div class="custom-el-5 custom-pos-4">
+                    <img class="img-fluid opacity-2 opacity-hover-2" src="{{ asset('img/demos/accounting-1/svg/waves.svg') }}" alt="">
+                </div>
+            </div>                    
+            <div class="container p-relative z-index-1 py-2">
+                <div class="row align-items-center py-4">
+                    <div class="col-8 col-md-7">
+                        <div class="appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="0">
+                            <span class="badge bg-color-dark-rgba-10 text-light rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-3">
+                                <span class="d-inline-flex py-1 px-2">Incident</span>
+                            </span>
+                        </div>
+                        <div class="appear-animation" data-appear-animation="fadeIn" data-appear-animation-delay="200">
+                            <h1 class="text-dark text-9 text-lg-12 font-weight-semibold line-height-1 mb-2">Ajouter un Incident</h1>
+                        </div>
+                        <div class="appear-animation" data-appear-animation="fadeIn" data-appear-animation-delay="200">
+                            <ul class="breadcrumb d-flex text-3-5 font-weight-semi-bold pb-2 mb-3">
+                                <li class="active">Nouvel Incident</li>
+                            </ul>
+                        </div>
+                         <div class="appear-animation" data-appear-animation="fadeInUpShorter" data-appear-animation-delay="800">
+										<div class="d-flex pt-4 align-items-center">
+											<a href="{{ path('app_incidents') }}" class="btn btn-rounded btn-outline-dark box-shadow-7 font-weight-medium mt-3">
+    <span>← Retour à la Liste des Incidents</span>
+</a>
+										</div>
+									</div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+        <div class="container mt-5">
+            <div class="row mb-4">
+                <div class="col">
+                    <h1 class="text-dark fw-bold">Déclarer un nouvel incident</h1>
+                </div>
+                <div class="col text-end">
+                </div>
+            </div>
+            <div class="card shadow-sm p-4 border-0 rounded-4">
+                {{ include('incident/_form.html.twig') }}
+            </div>
+        </div>
+<div id="map-container" style="display: none; margin-bottom: 20px;">
+    <div id="map" style="height: 400px;" class="mb-4 rounded shadow"></div>
+</div>
+
+        <div class="mb-5 mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <span class="badge bg-gradient-light-primary-rgba-20 text-secondary rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-4">
+                            <span class="d-inline-flex py-1 px-2">Conseils</span>
+                        </span>
+                        <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Avant de soumettre</h2>
+                        <p>Veuillez remplir tous les champs obligatoires et ajouter une image si possible. L’incident sera ensuite traité par le service concerné.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

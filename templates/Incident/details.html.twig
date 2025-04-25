@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+{{ include('shared/header.html.twig') }}
+
+<div class="body">
+    <div role="main" class="main px-3 px-lg-5">
+        <div class="container mt-5">
+            <div class="page-header py-0 px-3 px-xl-0 border-radius-2 p-relative mb-5" style="background-color:rgb(166, 146, 253)">
+                <div class="overflow-hidden p-absolute top-0 left-0 bottom-0 h-100 w-100">
+                    <div class="custom-el-5 custom-pos-4">
+                        <img class="img-fluid opacity-2 opacity-hover-2" src="{{ asset('img/demos/accounting-1/svg/waves.svg') }}" alt="">
+                    </div>
+                </div>                    
+                <div class="container p-relative z-index-1 py-2">
+                    <div class="row align-items-center py-4">
+                        <div class="col-12">
+                            <div class="appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="0">
+                                <span class="badge bg-color-dark-rgba-10 text-light rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-3">
+                                    <span class="d-inline-flex py-1 px-2">Incident</span>
+                                </span>
+                            </div>
+                            <div class="appear-animation" data-appear-animation="fadeIn" data-appear-animation-delay="200">
+                                <h1 class="text-dark text-9 font-weight-semibold line-height-1 mb-2">Détails de l'incident</h1>
+                            </div>
+                            <div class="appear-animation" data-appear-animation="fadeIn" data-appear-animation-delay="200">
+                                <ul class="breadcrumb d-flex text-3-5 font-weight-semi-bold pb-2 mb-3">
+                                    <li><a href="{{ path('app_incidents') }}">Liste des incidents</a></li>
+                                    <li class="active">Détails</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenu des détails -->
+            <div class="card shadow-sm p-5 border-0 rounded-4">
+                <div class="row">
+                  <div class="col-md-6">
+                        <h4 class="mb-3 text-dark">📌 Type d'incident :</h4>
+                        <p class="text-4">{{ incident.typeIncident }}</p>
+
+                        <h4 class="mb-3 text-dark">🗒️ Description :</h4>
+                        <p class="text-4">{{ incident.description }}</p>
+
+                        <h4 class="mb-3 text-dark">📍 Localisation :</h4>
+                        <p class="text-4">{{ incident.localisation }}</p>
+
+                        <h4 class="mb-3 text-dark">📅 Date de signalement :</h4>
+                        <p class="text-4">{{ incident.dateSignalement ? incident.dateSignalement|date('d/m/Y H:i') : 'Non définie' }}</p>
+
+                        <h4 class="mb-3 text-dark">🔖 Statut :</h4>
+                        <p class="text-4">
+                            {% if incident.statut == 'En attente' %}
+                                    <span class="badge bg-danger">En attente</span>
+                                {% elseif incident.statut == 'En cours' %}
+                                    <span class="badge bg-warning text-dark">En cours</span>
+                                {% elseif incident.statut == 'Résolu' %}
+                                    <span class="badge bg-success">Résolu</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Non défini</span>
+                                {% endif %}
+                        </p>
+
+                        <a href="{{ path('app_incidents') }}" class="btn btn-rounded btn-dark mt-4">
+                            <i class="fa-solid fa-arrow-left me-2"></i> Retour à la liste
+                        </a>
+                                     <a href="{{ path('app_incident_edit', {'id': incident.id}) }}" class="btn btn-rounded btn-primary mt-3 ms-2">
+    <i class="fa-solid fa-pen-to-square me-2"></i> Modifier l'incident
+</a>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <h4 class="mb-4 text-dark">Image de l'incident :</h4>
+                        <img src="{{ asset('uploads/' ~ incident.image) }}" alt="Image de l'incident" class="img-fluid rounded" style="max-width: 100%;">
+           
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{ include('shared/footer.html.twig') }}
+<!-- Modal de confirmation -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmer la suppression</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        Êtes-vous sûr de vouloir supprimer cet incident ? Cette action est irréversible.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <a href="{{ path('app_incident_delete', { id: incident.id }) }}" class="btn btn-danger">Supprimer</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+  body {
+    background-color: #f5f7fa;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .admin-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .admin-card-header {
+    background: linear-gradient(to right, #667eea, #764ba2);
+    color: white;
+    padding: 2rem;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block title %}Modifier un Service{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Modifier le Service: {{ service.nomService }}</h1>
+
+        <!-- Affichage du formulaire d'édition -->
+        <div class="col-md-8 mx-auto">
+            <form method="post" action="{{ path('edit_service', {'id': service.id}) }}">
+                {{ form_start(form) }}
+                    <div class="form-group">
+                        {{ form_label(form.nomService) }}
+                        {{ form_widget(form.nomService, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.typeIntervention) }}
+                        {{ form_widget(form.typeIntervention, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.zoneIntervention) }}
+                        {{ form_widget(form.zoneIntervention, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                {{ form_end(form) }}
+            </form>
+        </div>
+
+        <!-- Bouton Retour à la liste -->
+        <div class="mt-4 text-center">
+            <a href="{{ path('list_service') }}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+{% endblock %}
