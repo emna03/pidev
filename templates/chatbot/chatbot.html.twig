@@ -1,19 +1,10 @@
+{% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-    <link href="{{ asset('css/chatbot.css') }}" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-   
-{% endblock %}
-{% block head %}
-<head>
-<meta charset="utf-8" />
-    <title>{% block title %}Chatbot{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <meta name="csrf-token" content="{{ csrf_token('api') }}">
- </head>
-{% endblock %}
 {% block body %}
-<div class="chat-container">
+<br>
+<br>
+
+<div class="chat-container" >
     <div class="chat-header">
         <h2>AI Assistant</h2>
     </div>
@@ -25,7 +16,6 @@
         <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
         
     </div>
-    <a href="{{ path('home') }}" ><i class="fas fa-paper-plane">Return to webpage</i> </a>
 </div>
 
 
