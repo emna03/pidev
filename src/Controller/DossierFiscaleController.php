@@ -9,6 +9,7 @@ use App\Repository\DeclarationRevenusRepository;
 use App\Repository\DossierFiscaleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Checkout\Session;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -200,6 +201,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, Dec
 
     #[Route('/admin/{id}', name: 'admin_dossier_fiscale_delete', methods: ['POST'])]
     public function adminDelete(Request $request, DossierFiscale $dossierFiscale, EntityManagerInterface $entityManager): Response
+
     {
         if ($this->isCsrfTokenValid('delete'.$dossierFiscale->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($dossierFiscale);
@@ -287,6 +289,5 @@ public function new(Request $request, EntityManagerInterface $entityManager, Dec
     }
     
     
-
 
 }

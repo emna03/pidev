@@ -43,6 +43,7 @@ class UtilisateurRepository extends ServiceEntityRepository
 }
 
 
+<<<<<<< HEAD
 public function getStatistics(): array
     {
         $qb = $this->createQueryBuilder('u');
@@ -85,5 +86,7 @@ public function getStatistics(): array
         ];
     }
 
+=======
+>>>>>>> gestion_paperasses_siwar
     // Ajouter d'autres requêtes personnalisées si besoin
 }

@@ -43,7 +43,7 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-    
+
             $action = $request->request->get('action');
 
             if ($action === 'disable') {
@@ -57,6 +57,7 @@ class ProfileController extends AbstractController
     
                 return $this->redirectToRoute('app_logout'); // Déconnectez l'utilisateur après désactivation
             }
+
             /** @var UploadedFile $photoFile */
             $photoFile = $form->get('photo_profil')->getData();
     

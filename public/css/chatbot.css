@@ -1,0 +1,54 @@
+/* Add this to your base template's CSS */
+body {
+  background: white !important; /* Override any existing body background */
+  margin: 0;
+  padding: 0;
+}
+
+/* Existing chat styles with enhancements */
+.chat-container {
+  max-width: 420px;
+  margin: 40px auto;
+  background: white; /* Explicit white background */
+  border-radius: 18px;
+  box-shadow: 0 4px 15px rgba(111, 66, 193, 0.2);
+  border: 2px solid #6f42c1;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.chat-header {
+  background: #6f42c1;
+  color: white;
+  padding: 20px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  text-align: center;
+}
+
+.chat-box {
+  height: 500px;
+  padding: 20px;
+  overflow-y: auto;
+  border-bottom: 1px solid #ddd;
+  background: #f8f9fa; /* Light gray background */
+}
+
+.input-group {
+  display: flex;
+  padding: 15px;
+  background: white; /* Match container background */
+  border-top: 1px solid #ddd;
+}
+
+/* Add these new rules to eliminate any pink areas */
+.message {
+  background: white !important; /* Override any conflicting styles */
+}
+
+.user-msg {
+  background: #e5dbf7 !important;
+}
+
+.bot-msg {
+  background: #f0e6ff !important;
+}

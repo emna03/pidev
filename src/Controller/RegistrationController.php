@@ -20,6 +20,7 @@ use App\Repository\UtilisateurRepository;
 use App\Security\LoginFormAuthenticator;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+
 class RegistrationController extends AbstractController
 {
     private UrlGeneratorInterface $urlGenerator;
@@ -120,8 +121,10 @@ class RegistrationController extends AbstractController
                 $loginFormAuthenticator,
                 $request
             );
-        }
 
+            
+        }
+    
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
         ]);
@@ -138,13 +141,13 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         $user->deactivate();
-
         if ($request->isMethod('POST')) {
             $numeroTel = $request->request->get('numero_telephone');
             $photoFile = $request->files->get('photo_profil');
             $nom = $request->request->get('nom');
             $prenom = $request->request->get('prenom');
             $role = 'Citoyen';
+
 
             if ($numeroTel) {
                 $user->setNumeroTelephone($numeroTel);
@@ -180,6 +183,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_home');
+
         }
 
         return $this->render('registration/complete_profil.html.twig');
@@ -222,4 +226,5 @@ class RegistrationController extends AbstractController
 
         return new Response('✅ Email de test envoyé (vérifie ta boîte !)');
     }
+
 }

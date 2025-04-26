@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div class="container mt-4">
+   <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h1 class="mb-4">Modifier le Document</h1>
+
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form_row(form.nomDocument, {
+                            'attr': {'class': 'form-control', 'placeholder': 'Nom du document'}
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.cheminFichier, {
+                            'attr': {'class': 'form-control', 'placeholder': 'Sélectionner un fichier'}
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.remarque, {
+                            'attr': {'class': 'form-control', 'placeholder': 'Remarque'}
+                        }) }}
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-success" formnovalidate>
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                    <a href="{{ path('document_index') }}" class="btn btn-secondary ms-2">
+                        Annuler
+                    </a>
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

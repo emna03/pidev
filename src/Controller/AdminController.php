@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\DeclarationRevenusRepository;
 use App\Repository\DossierFiscaleRepository;
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Repository\UtilisateurRepository;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\LoginAttemptRepository;
+
 
 #[Route('/admin')]
 class AdminController extends AbstractController
@@ -160,5 +162,6 @@ public function showLoginAttempts(LoginAttemptRepository $repo): Response
         'logs' => $logs
     ]);
 }
+
 
 }

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du document{% endblock %}
+
+{% block body %}
+    <h1>{{ document.nomDocument }}</h1>
+    <p><strong>Chemin du fichier:</strong> {{ document.cheminFichier }}</p>
+    <p><strong>Date d'émission:</strong> {{ document.dateEmission ? document.dateEmission|date('Y-m-d') : '' }}</p>
+    <p><strong>Statut:</strong> {{ document.status }}</p>
+    <p><strong>Remarque:</strong> {{ document.remarque }}</p>
+
+    <a href="{{ path('document_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    <a href="{{ path('document_edit', {'id': document.id}) }}" class="btn btn-warning">Modifier</a>
+    {{ include('document/_delete_form.html.twig', {'document': document}) }}
+{% endblock %}

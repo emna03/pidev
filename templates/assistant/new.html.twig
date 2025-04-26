@@ -1,0 +1,62 @@
+{% extends 'baseback.html.twig' %}
+
+{% block title %}Nouvelle Demande{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="text-primary mb-4">Nouvelle demande d'assistance</h1>
+
+    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form_row(form.utilisateur, {
+                            'attr': {'class': 'form-control', 'placeholder': 'Utilisateur'}
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.document, {
+                            'attr': {'class': 'form-control', 'placeholder': 'Document'}
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.typeAssistance, {
+                            'attr': {'class': 'form-select', 'placeholder': 'Type d\'assistance'}
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.dateDemande, {
+                            'attr': {'class': 'form-control', 'placeholder': 'Date de la demande', 'type': 'date'}
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.status, {
+                            'attr': {'class': 'form-select', 'placeholder': 'Statut'}
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.remarque, {
+                            'attr': {'class': 'form-control', 'placeholder': 'Remarque'}
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.rappelAutomatique, {
+                            'attr': {'class': 'form-check-input'}
+                        }) }}
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary" formnovalidate>
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                    <a href="{{ path('assistantdocumentaire_index') }}" class="btn btn-secondary ms-2">
+                        Annuler
+                    </a>
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

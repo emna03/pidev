@@ -1,3 +1,42 @@
+<<<<<<< HEAD
 bg-color-1 {
   background-color: var(--primary1) !important;
 }
+=======
+.custom-form label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.4rem;
+}
+
+.custom-form .form-control {
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+    box-shadow: none;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.custom-form .form-control:focus {
+    border-color: #00a8ff;
+    box-shadow: 0 0 0 0.15rem rgba(0, 168, 255, 0.25);
+}
+
+.custom-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.custom-form .btn-primary {
+    background: #00a8ff;
+    border-color: #00a8ff;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+.custom-form .btn-primary:hover {
+    background: #008cce;
+    border-color: #008cce;
+}
+>>>>>>> gestion_paperasses_siwar

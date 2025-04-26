@@ -18,13 +18,16 @@ security:
             provider: app_user_provider
             custom_authenticator: App\Security\LoginFormAuthenticator
             entry_point: null
+
+
             logout:
                 path: app_logout
                 target: app_home
 
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 604800
+
+                lifetime: 604800 # 7 jours en secondes
                 path: /
 
     access_control:

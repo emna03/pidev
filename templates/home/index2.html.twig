@@ -1,0 +1,64 @@
+{% extends 'baseback.html.twig' %}
+
+{% block body %}
+{# Statistics Cards #}
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card text-white shadow" style="background-color: #8a50c2;"> {# Lighter Purple #}
+                <div class="card-body">
+                    <h5 class="card-title">Validés</h5>
+                    <p class="card-text display-4">{{ count_valide }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-white shadow" style="background-color: #4b1e97;"> {# Darker Purple #}
+                <div class="card-body">
+                    <h5 class="card-title">Rejetés</h5>
+                    <p class="card-text display-4">{{ count_rejete }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+      {# Chart Container #}
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-dark text-white">
+            Statistiques des Documents
+        </div>
+        <div class="card-body">
+            <canvas id="statusChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+<script>
+    // Fetch data from Twig variables
+    const countValide = {{ count_valide }};
+    const countRejete = {{ count_rejete }};
+
+    // Initialize the chart
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Validés', 'Rejetés'],
+            datasets: [{
+                label: 'Nombre de documents',
+                data: [countValide, countRejete],
+                backgroundColor: ['#6f42c1', '#5a32a3'],
+                borderColor: ['#5a32a3', '#3b1b6b'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    precision: 0
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+{% endblock %}

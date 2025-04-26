@@ -14,6 +14,11 @@ services:
         arguments:
             $apiUrl: '%env(NEWS_API_URL)%'  # API URL from .env
    
+    python_path: '%env(PYTHON_PATH)%'
+    python_script_dir: '%env(PYTHON_SCRIPT_DIR)%'
+    python_script_timeout: '%env(int:PYTHON_SCRIPT_TIMEOUT)%'
+    Symfony\Component\Finder\Finder: ~
+    
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -237,6 +238,7 @@ final class DeclarationRevenusController extends AbstractController
             throw $this->createAccessDeniedException('You are not allowed to view this declaration.');
         }
 
+
         return $this->render('declaration_revenus/show.html.twig', [
             'declaration_revenu' => $declarationRevenu,
         ]);
@@ -274,6 +276,7 @@ final class DeclarationRevenusController extends AbstractController
         }
 
         if ($this->isCsrfTokenValid('delete' . $declarationRevenu->getId(), $request->getPayload()->getString('_token'))) {
+
             $entityManager->remove($declarationRevenu);
             $entityManager->flush();
         }
@@ -286,6 +289,7 @@ final class DeclarationRevenusController extends AbstractController
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $slugger->slug($originalFilename);
+
         $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
         try {
