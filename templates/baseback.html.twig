@@ -15,6 +15,7 @@
     
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('Back/images/favicon.ico') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Bootstrap Css -->
     <link href="{{ asset('Back/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
@@ -266,7 +267,7 @@
                         <li class="menu-title">MENU</li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link {% if app.request.get('_route') == 'dashboard' %}active{% endif %}">
+                            <a href="{{ path('dashboard') }}" class="nav-link {% if app.request.get('_route') == 'dashboard' %}active{% endif %} ">
                                 <i class="bx bx-home-circle"></i>
                                 <span>Dashboard</span>
                             </a>
