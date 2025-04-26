@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\DeclarationRevenus;
 use App\Entity\Utilisateur;
 use App\Form\DeclarationRevenusType;
-use App\Repository\DeclarationRevenusRepository;
+use App\Repository\DeclarationrevenusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -25,7 +25,7 @@ final class DeclarationRevenusController extends AbstractController
 {
     // Routes for user-facing declarations
     #[Route(name: 'app_declaration_revenus_index', methods: ['GET'])]
-    public function index(DeclarationRevenusRepository $declarationRevenusRepository): Response
+    public function index(DeclarationrevenusRepository $declarationRevenusRepository): Response
     {
         $user = $this->getUser();
         if (!$user instanceof Utilisateur) {

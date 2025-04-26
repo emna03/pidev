@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\DeclarationRevenusRepository;
+use App\Repository\DeclarationrevenusRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;

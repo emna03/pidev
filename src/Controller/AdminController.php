@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Repository\DeclarationRevenusRepository;
-use App\Repository\DossierFiscaleRepository;
+use App\Repository\DeclarationrevenusRepository;
+use App\Repository\DossierfiscaleRepository;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -133,6 +133,7 @@ public function index(Request $request, UtilisateurRepository $userRepository): 
                 'dateCreation' => $dossier->getDateCreation(),
                 'status' => $dossier->getStatus(),];
         }
+          $declarationArray=[];
         foreach ($declarations as $declaration) {
             $declarationArray[] = [
                 'montantRevenu' => $declaration->getMontantRevenu(),

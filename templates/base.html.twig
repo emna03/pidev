@@ -2,8 +2,14 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token('authenticate') }}">
+
     <title>{% block title %}Mon Site{% endblock %}</title>
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+            <link href="{{ asset('css/chatbot.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+{% endblock %}
     {% include 'chat/chat_widget.html.twig' %}
 
 </head>
@@ -17,6 +23,8 @@
 
     {% include 'shared/footer.html.twig' %}
 
-    {% block javascripts %}{% endblock %}
+    {% block javascripts %}
+    <script src="{{ asset('js/document-upload.js') }}"></script>
+    {% endblock %}
 </body>
 </html>

@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\IncidentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Utilisateur;
+use App\Entity\Serviceintervention;
+
 
 #[ORM\Entity(repositoryClass: IncidentRepository::class)]
 class Incident
@@ -41,9 +43,9 @@ class Incident
     #[ORM\Column(type: "datetime")]
     private \DateTimeInterface $dateSignalement;
 
-    #[ORM\ManyToOne(targetEntity: ServiceIntervention::class)]
+    #[ORM\ManyToOne(targetEntity: Serviceintervention::class)]
     #[ORM\JoinColumn(name: "service_affecte", referencedColumnName: "id", nullable: true)]
-    private ?ServiceIntervention $serviceAffecte = null;
+    private ?Serviceintervention $serviceAffecte = null;
 
     #[ORM\Column(type: "integer", nullable: true)]  // Make utilisateurId nullable
     private ?int $utilisateurId = null;
@@ -146,12 +148,12 @@ class Incident
         return $this;
     }
 
-    public function getServiceAffecte(): ?ServiceIntervention
+    public function getServiceAffecte(): ?Serviceintervention
     {
         return $this->serviceAffecte;
     }
     
-    public function setServiceAffecte(?ServiceIntervention $serviceAffecte): self
+    public function setServiceAffecte(?Serviceintervention $serviceAffecte): self
     {
         $this->serviceAffecte = $serviceAffecte;
         return $this;

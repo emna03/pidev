@@ -1,10 +1,145 @@
-{% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link href="{{ asset('css/chatbot.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+   
+{% endblock %}
+{% block head %}
+<head>
+<meta charset="utf-8" />
+    <title>{% block title %}Chatbot{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="csrf-token" content="{{ csrf_token('api') }}">
+ </head>
+{% endblock %}
 {% block body %}
-<br>
-<br>
 
-<div class="chat-container" >
+
+
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon" />
+<link rel="apple-touch-icon" href="{{ asset('img/apple-touch-icon.png') }}">
+
+<!-- Mobile Metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, shrink-to-fit=no">
+
+<!-- Web Fonts -->
+<link id="googleFonts" href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" type="text/css">
+
+<!-- Vendor CSS -->
+<link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/animate/animate.compat.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/simple-line-icons/css/simple-line-icons.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/owl.carousel/assets/owl.carousel.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/owl.carousel/assets/owl.theme.default.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/magnific-popup/magnific-popup.min.css') }}">
+
+<!-- Theme CSS -->
+<link rel="stylesheet" href="{{ asset('css/theme.css') }}">
+<link rel="stylesheet" href="{{ asset('css/theme-elements.css') }}">
+<link rel="stylesheet" href="{{ asset('css/theme-blog.css') }}">
+<link rel="stylesheet" href="{{ asset('css/theme-shop.css') }}">
+
+<!-- Demo CSS -->
+<link rel="stylesheet" href="{{ asset('css/demos/demo-accounting-1.css') }}">
+
+<!-- Skin CSS -->
+<link id="skinCSS" rel="stylesheet" href="{{ asset('css/skins/skin-accounting-1.css') }}">
+
+<!-- Theme Custom CSS -->
+<link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T21B0FFW8M"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-T21B0FFW8M');
+</script>
+
+<header id="header" data-plugin-options="{'stickyScrollUp': true, 'stickyEnabled': true, 'stickyEffect': 'shrink', 'stickyEnableOnBoxed': true, 'stickyEnableOnMobile': false, 'stickyChangeLogo': false, 'stickyStartAt': 100, 'stickyHeaderContainerHeight': 100}">
+    <div class="header-body border-top-0 h-auto box-shadow-none">
+        <div class="container-fluid px-3 px-lg-5 p-static">
+            <div class="row align-items-center py-3">
+                <div class="col-auto col-lg-2 col-xxl-3 me-auto me-lg-0">
+                    <div class="header-logo" data-clone-element-to="#offCanvasLogo">
+                        <a href="{{ path('app_home') }}">
+                            <img alt="CiviSmart" width="200" height="50" src="{{ asset('logo.png') }}" data-img-suffix-primary>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-auto col-lg-8 col-xxl-6 justify-content-lg-center">
+                    <div class="header-nav header-nav-links justify-content-lg-center">
+                        <div class="header-nav-main header-nav-main-text-capitalize header-nav-main-arrows header-nav-main-effect-2">
+                            <nav class="collapse">
+                                <ul class="nav nav-pills" id="mainNav">
+                                    <li>
+                                        <a href="{{ path('app_home') }}" class="nav-link">Home</a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="nav-link dropdown-toggle active">Services</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#" class="dropdown-item">Overview</a></li>
+                                            <li><a href="{{ path('app_declaration_revenus_index') }}" class="dropdown-item">Service fiscale</a></li>
+                                            <li><a href="{{ path('app_incidents') }}" class="dropdown-item">Service incident</a></li>
+   
+                                                    <li><a href="{{ path('document_index') }}" class="dropdown-item anim-hover-translate-right-5px transition-3ms bg-transparent text-color-hover-primary text-lg-2 py-lg-2">Document Administratif</a></li>
+                                                    <li><a href="{{ path('app_chatbot') }}" class="dropdown-item anim-hover-translate-right-5px transition-3ms bg-transparent text-color-hover-primary text-lg-2 py-lg-2">Chatbot</a></li>
+                                                    <li><a href="{{ path('document_pdf_gen') }}" class="dropdown-item anim-hover-translate-right-5px transition-3ms bg-transparent text-color-hover-primary text-lg-2 py-lg-2">Prompt</a></li>
+
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="#">About</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="#">Process</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="#">Projects</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="{{ path('news_index') }}">Actualités</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link" href="#">Contact</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto col-lg-2 col-xxl-3">
+                    <div class="d-flex justify-content-end align-items-center">
+                        <div class="d-none d-sm-flex d-lg-none d-xxl-flex">
+                            <img src="{{ asset('img/icons/phone-2.svg') }}" width="24" height="24" alt="" data-icon data-plugin-options="{'onlySVG': true, 'extraClass': 'svg-fill-color-secondary pe-1'}" />
+                            <a href="tel:1234567890" class="text-decoration-none font-secondary text-4 font-weight-semibold text-color-dark text-color-hover-primary transition-2ms negative-ls-05 ws-nowrap">800 123 4567</a>
+                        </div>
+                        <a href="#" id="toggleProfile" class="btn btn-rounded btn-dark box-shadow-7 font-weight-medium px-3 py-2 text-2-5 ms-3 d-none d-md-flex">
+                            <i class="fas fa-user"></i>
+                        </a>
+                        <button class="btn header-btn-collapse-nav rounded-pill" data-bs-toggle="offcanvas" href="#offcanvasMain" role="button" aria-controls="offcanvasMain">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+{% include 'utilisateur/_profile_popup.html.twig' %}
+
+
+
+
+
+
+
+<div class="chat-container">
     <div class="chat-header">
         <h2>AI Assistant</h2>
     </div>
@@ -15,9 +150,117 @@
         <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
         <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
         
+  
     </div>
+       <a href="{{ path('home') }}" > 
+  <button style={ width:100%;  } id="gohomebutton">      <i id="iconbuttongohome" >Return to webpage</i> 
+</button></a>
 </div>
 
 
 <script src="{{ asset('js/chatbot.js') }}"></script>
+
+
+<footer id="footer" class="border-0 px-3 px-lg-5 pt-0 text-3" style="background-color: #1f1f1f;">
+    <div class="container pb-lg-4 pt-5">
+        <div class="row pt-3 text-light">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <h4 class="text-white font-weight-bold mb-3">Porto</h4>
+                <p class="text-light opacity-75">Porto - Expert Accounting Solutions Tailored to Your Needs—Ensuring Accuracy, Compliance, and Financial Peace of Mind.</p>
+                <div class="d-flex align-items-center pt-2 pb-4">
+                    <p class="d-inline-block mb-0 font-weight-bold line-height-1">
+                        <mark class="bg-primary text-white px-2 py-1 rounded">3+</mark>
+                    </p>
+                    <span class="text-white-50 ps-2 fst-italic">Years of Experience</span>
+                </div>
+                <ul class="social-icons social-icons-clean social-icons-medium">
+                    <li class="social-icons-instagram">
+                        <a href="#" target="_blank" title="Instagram" class="text-white-50 hover-text-primary">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </li>
+                    <li class="social-icons-x">
+                        <a href="#" target="_blank" title="X" class="text-white-50 hover-text-primary">
+                            <i class="fab fa-x-twitter"></i>
+                        </a>
+                    </li>
+                    <li class="social-icons-facebook">
+                        <a href="#" target="_blank" title="Facebook" class="text-white-50 hover-text-primary">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-sm-6 col-lg-2 mb-4 mb-lg-0">
+                <h5 class="text-white font-weight-bold mb-3">À propos</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Accueil</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Services</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">À propos</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Processus</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Projets</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Actualités</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="col-sm-6 col-lg-3 mb-4 mb-lg-0">
+                <h5 class="text-white font-weight-bold mb-3">Nos Services</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Comptabilité</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Planification fiscale</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Conseil aux entreprises</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Gestion de paie</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Comptabilité globale</a></li>
+                    <li><a href="#" class="text-white-50 text-decoration-none hover-text-primary">Services administratifs</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3">
+                <h5 class="text-white font-weight-bold mb-3">Newsletter</h5>
+                <p class="text-light opacity-75">Recevez nos actualités et mises à jour.</p>
+                <form id="newsletterForm" action="#" method="POST" class="mb-0">
+                    <div class="mb-2">
+                        <input type="email" class="form-control bg-dark border-secondary text-white placeholder-light" placeholder="Votre e-mail" name="newsletterEmail">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm px-3 py-2">S'inscrire <i class="fa fa-arrow-right ms-2"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-copyright text-light mt-5">
+        <div class="container">
+            <hr class="bg-secondary">
+            <div class="row">
+                <div class="col-lg-6 text-center text-lg-start py-3">
+                    <p class="mb-0 text-white-50">© 2025 <strong class="text-white">Porto</strong> — Tous droits réservés.</p>
+                </div>
+                <div class="col-lg-6 py-3 text-center text-lg-end">
+                    <a href="#" class="text-white-50 text-decoration-none hover-text-primary">Politique de confidentialité</a>
+                    <span class="mx-2 text-white-50">|</span>
+                    <a href="#" class="text-white-50 text-decoration-none hover-text-primary">Conditions d’utilisation</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Vendor -->
+<script data-cfasync="false" src="{{ asset('cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js') }}"></script>
+<script src="{{ asset('vendor/plugins/js/plugins.min.js') }}"></script>
+
+<!-- Theme Base, Components and Settings -->
+<script src="{{ asset('js/theme.js') }}"></script>
+
+<!-- Demo -->
+<script src="{{ asset('js/demos/demo-accounting-1.js') }}"></script>
+
+<!-- Theme Initialization Files -->
+<script src="{{ asset('js/theme.init.js') }}"></script>
+
+<!-- Current Page Vendor and Views -->
+<script src="{{ asset('js/views/view.contact.js') }}"></script>
+
+
 {% endblock %}

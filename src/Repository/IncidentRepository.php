@@ -6,12 +6,10 @@ use App\Entity\Incident;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-<<<<<<< HEAD
 /**
  * @extends ServiceEntityRepository<Incident>
  */
-=======
->>>>>>> gestion_paperasses_siwar
+
 class IncidentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -19,7 +17,6 @@ class IncidentRepository extends ServiceEntityRepository
         parent::__construct($registry, Incident::class);
     }
 
-<<<<<<< HEAD
     //    /**
     //     * @return Incident[] Returns an array of Incident objects
     //     */
@@ -45,7 +42,3 @@ class IncidentRepository extends ServiceEntityRepository
     //        ;
     //    }
 }
-=======
-    // Add custom methods as needed
-}
->>>>>>> gestion_paperasses_siwar

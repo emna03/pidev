@@ -1,46 +1,21 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
-<style>
-    /* Purple Theme Styles */
-    h1 {
-        color: #6f42c1 !important; /* Bootstrap Purple */
-    }
-
-    .btn-primary {
-        background-color: #6f42c1 !important;
-        border-color: #6f42c1 !important;
-    }
-
-    .btn-primary:hover {
-        background-color: #5a32a3 !important; /* Darker Purple */
-        border-color: #5a32a3 !important;
-    }
-
-    .form-control {
-        border-color: #6f42c1 !important;
-    }
-
-    .form-control:focus {
-        border-color: #5a32a3 !important;
-        box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
-    }
-</style>
-
 <div class="container mt-4">
-    <br><br><br><br><br><br><br><br><br>
-    <h1 class="mb-4">Generate PDF Prompt - Documents Administratifs</h1>
-
-    <form id="pdf-form" class="p-4 border rounded">
-        <div class="mb-3">
-            <textarea id="pdf-content" class="form-control" rows="10" 
-                      placeholder="Enter structured text here..."></textarea>
-        </div>
-        <button type="button" class="btn btn-primary" onclick="generatePdf()">
-            Generate PDF
-        </button>
-    </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h1 class="mb-4">generate pdf prompt Documents Administratifs</h1>
 </div>
-
+<form id="pdf-form">
+    <textarea id="pdf-content" class="form-control" rows="10" placeholder="Enter structured text here..."></textarea>
+    <button type="button" class="btn btn-primary mt-3" onclick="generatePdf()">Generate PDF</button>
+</form>
 <script src="{{ asset('js/prompt.js') }}"></script>
+
 {% endblock %}

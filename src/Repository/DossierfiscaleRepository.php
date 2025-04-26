@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Dossierfiscale;
+use App\Entity\DossierFiscale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Declarationrevenus;
+use App\Entity\DeclarationRevenus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

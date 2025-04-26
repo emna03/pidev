@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\DeclarationRevenus;
 use App\Entity\DossierFiscale;
 use App\Form\DossierFiscaleType;
-use App\Repository\DeclarationRevenusRepository;
-use App\Repository\DossierFiscaleRepository;
+use App\Repository\DeclarationrevenusRepository;
+use App\Repository\DossierfiscaleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Checkout\Session;
 
@@ -23,7 +23,7 @@ final class DossierFiscaleController extends AbstractController
     // User-facing routes
     #[Route(name: 'app_dossier_fiscale_index', methods: ['GET'])]
     public function index(
-        DossierFiscaleRepository $dossierFiscaleRepository
+        DossierfiscaleRepository $dossierFiscaleRepository
     ): Response {
         // Get connected user
         $user = $this->getUser();
@@ -64,7 +64,7 @@ final class DossierFiscaleController extends AbstractController
     }
     
     #[Route('/new', name: 'app_dossier_fiscale_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager, DeclarationRevenusRepository $declarationRepo): Response
+public function new(Request $request, EntityManagerInterface $entityManager, DeclarationrevenusRepository $declarationRepo): Response
 {
     $dossier = new DossierFiscale();
     $declarationId = $request->query->get('declarationId');

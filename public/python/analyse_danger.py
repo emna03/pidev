@@ -7,7 +7,6 @@ model = YOLO("C:/Users/ichaa/Desktop/ESPRIT/ESPRIT 3A/Git Projects/integration m
 # Charger l'imag
 image_path = sys.argv[1]
 results = model(image_path)
-
 # Analyser les objets détectés
 detected_classes = results[0].boxes.cls.tolist()
 class_names = results[0].names

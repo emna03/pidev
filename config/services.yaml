@@ -7,17 +7,18 @@ parameters:
     uploads_directory: '%kernel.project_dir%/public/uploads'
     NEWS_API_URL: '%env(NEWS_API_URL)%'
    
-
-
-services:
-    App\Service\NewsService:
-        arguments:
-            $apiUrl: '%env(NEWS_API_URL)%'  # API URL from .env
    
     python_path: '%env(PYTHON_PATH)%'
     python_script_dir: '%env(PYTHON_SCRIPT_DIR)%'
     python_script_timeout: '%env(int:PYTHON_SCRIPT_TIMEOUT)%'
     Symfony\Component\Finder\Finder: ~
+
+services:
+    App\Service\NewsService:
+        arguments:
+            $apiUrl: '%env(NEWS_API_URL)%'  # API URL from .env
+    Symfony\Component\Finder\Finder: ~
+
     
     # default configuration for services in *this* file
     _defaults:

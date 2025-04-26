@@ -246,6 +246,7 @@
     <div id="layout-wrapper">
         <!-- Sidebar -->
         <div class="vertical-menu">
+        
             <a href="#" class="navbar-brand">
                 <i class="bx bx-bridge"></i> CiviSmart
             </a>
@@ -342,6 +343,73 @@
     </div>
 </li>
 
+  <div class="h-100">
+                <div id="sidebar-menu">
+                    <!-- Left Menu Start -->
+                    <ul class="nav flex-column" id="side-menu">
+                  
+                        <li class="nav-item">
+                            <a href="{{ path('dashboard') }}" class="nav-link {% if app.request.get('_route') == 'dashboard' %}active{% endif %} ">
+                                <i class="bx bx-home-circle"></i>
+                                <span>Statistiques</span>
+                            </a>
+                        </li>
+
+                        
+
+                        <li class="nav-item">
+                            <a href="#jobSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-briefcase"></i>
+                                <span>Documents</span>
+                            </a>
+                            <div class="collapse" id="jobSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a href="{{ path('assistantdocumentaire_index') }}" class="nav-link">Assistant Documentaire</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ path('document_index_back') }}" class="nav-link">Document Administratif</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#applicationSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-file"></i>
+                                <span>Déchet</span>
+                            </a>
+                            <div class="collapse" id="applicationSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">List déchet</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">Ajouter déchet</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#settingSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-cog"></i>
+                                <span>Camion</span>
+                            </a>
+                            <div class="collapse" id="settingSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">List de camion</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">Ajouter camion </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+          
                     </ul>
                 </div>
             </div>

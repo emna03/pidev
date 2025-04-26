@@ -88,6 +88,11 @@ public function translate(Request $request): JsonResponse
     /**
      * Query endpoint using test.py
      */
+
+
+
+
+
     #[Route('/api/python/query', name: 'api_python_query', methods: ['POST'])]
     public function query(Request $request): JsonResponse
     {
@@ -120,6 +125,11 @@ public function translate(Request $request): JsonResponse
             'response' => trim($result['output'])
         ]);
     }
+
+    
+
+
+    
     #[Route('/api/python/image', name: 'api_python_image', methods: ['POST'])]
     public function addFromImage(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {

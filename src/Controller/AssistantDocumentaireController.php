@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Assistantdocumentaire;
-use App\Form\AssistantdocumentaireType;
+use App\Form\AssistantDocumentaireType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +52,7 @@ class AssistantDocumentaireController extends AbstractController
     #[Route('/{id}/edit', name: 'assistantdocumentaire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Assistantdocumentaire $assistant, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(AssistantdocumentaireType::class, $assistant);
+        $form = $this->createForm(AssistantDocumentaireType::class, $assistant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

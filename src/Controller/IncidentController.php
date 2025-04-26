@@ -1,6 +1,5 @@
 <?php
 namespace App\Controller;
-
 use App\Entity\Incident;
 use App\Form\IncidentType;
 use App\Repository\IncidentRepository;

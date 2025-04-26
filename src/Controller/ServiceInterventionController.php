@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\ServiceIntervention;
+use App\Entity\Serviceintervention;
 use App\Form\ServiceInterventionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +15,7 @@ class ServiceInterventionController extends AbstractController
     #[Route('/admin/service/add', name: 'add_service')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $service = new ServiceIntervention();
+        $service = new Serviceintervention();
         $form = $this->createForm(ServiceInterventionType::class, $service);
 
         $form->handleRequest($request);
@@ -38,7 +38,7 @@ class ServiceInterventionController extends AbstractController
     public function list(EntityManagerInterface $entityManager): Response
     {
         // Récupérer tous les services depuis la base de données
-        $services = $entityManager->getRepository(ServiceIntervention::class)->findAll();
+        $services = $entityManager->getRepository(Serviceintervention::class)->findAll();
 
         return $this->render('back/home/listservice.html.twig', [
             'services' => $services,
@@ -50,7 +50,7 @@ class ServiceInterventionController extends AbstractController
 public function edit(int $id, Request $request, EntityManagerInterface $entityManager): Response
 {
     // Récupérer le service existant à partir de son ID
-    $service = $entityManager->getRepository(ServiceIntervention::class)->find($id);
+    $service = $entityManager->getRepository(Serviceintervention::class)->find($id);
 
     // Vérifier si le service existe
     if (!$service) {
@@ -58,7 +58,7 @@ public function edit(int $id, Request $request, EntityManagerInterface $entityMa
     }
 
     // Créer le formulaire d'édition
-    $form = $this->createForm(ServiceInterventionType::class, $service);
+    $form = $this->createForm(ServiceinterventionType::class, $service);
 
     // Traiter la requête du formulaire
     $form->handleRequest($request);
@@ -85,7 +85,7 @@ public function edit(int $id, Request $request, EntityManagerInterface $entityMa
     #[Route('/admin/service/delete/{id}', name: 'delete_service')]
     public function delete(EntityManagerInterface $entityManager, $id): Response
     {
-        $service = $entityManager->getRepository(ServiceIntervention::class)->find($id);
+        $service = $entityManager->getRepository(Serviceintervention::class)->find($id);
 
         if (!$service) {
             $this->addFlash('error', 'Service introuvable.');

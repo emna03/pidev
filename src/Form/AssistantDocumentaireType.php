@@ -63,7 +63,7 @@ class AssistantDocumentaireType extends AbstractType
             ])
             ->add('remarque', TextareaType::class, [
                 'label' => 'Remarque',
-                'required' => false,
+                'required' => true,
                 'attr' => ['rows' => 4]
             ])
             ->add('rappelAutomatique', CheckboxType::class, [

@@ -263,13 +263,101 @@
             <div class="h-100">
                 <div id="sidebar-menu">
                     <!-- Left Menu Start -->
-                    <ul class="nav flex-column" id="side-menu">
+                           <ul class="nav flex-column" id="side-menu">
                         <li class="menu-title">MENU</li>
+
+                        <li class="nav-item">
+                            <a href="{{ path('app_admin_dashboard') }}" class="nav-link {% if app.request.get('_route') == 'app_admin_dashboard' %}active{% endif %}">
+                                <i class="bx bx-home-circle"></i> <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#userSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-user"></i>
+                                <span>Gestion Fiscale</span>
+                            </a>
+                            <div class="collapse" id="userSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a href="{{path('admin_declaration_revenus_index')}}" class="nav-link">declarations fiscaux</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{path('admin_dossier_fiscale_index')}}" class="nav-link">Dossiers fiscaux</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#settingSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-cog"></i>
+                                <span>incident</span>
+                            </a>
+                            <div class="collapse" id="settingSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a href="{{ path('app_admin_home') }}" class="nav-link">Incident</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ path('list_service') }}" class="nav-link">Service</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#userSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-user"></i> <span>Lampadaire</span>
+                            </a>
+                            <div class="collapse" id="userSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                                                       {# <li class="nav-item"><a href="{{ path('app_lampadaire_index') }}" class="nav-link">Liste</a></li> #}
+                                    {# <li class="nav-item"><a href="{{ path('app_lampadaire_new') }}" class="nav-link">Ajouter</a></li> #}
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#quartierSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-briefcase"></i> <span>Quartier</span>
+                            </a>
+                            <div class="collapse" id="quartierSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                                                      {# <li class="nav-item"><a href="{{ path('app_quartier_index') }}" class="nav-link">Liste</a></li> #}
+                                    {# <li class="nav-item"><a href="{{ path('app_quartier_new') }}" class="nav-link">Ajouter</a></li> #}
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+    <a href="#utilisateurSubmenu" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="utilisateurSubmenu">
+        <i class="bx bx-user"></i> <span>Utilisateurs</span>
+    </a>
+    <div class="collapse" id="utilisateurSubmenu">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a href="{{ path('admin_users') }}" class="nav-link">
+                    <i class="bx bx-group"></i> utilisateurs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('admin_statistiques') }}" class="nav-link">
+                    <i class="bx bx-chart"></i> Statistiques
+                </a>
+            </li>
+            <li class="nav-item">
+    <a href="{{ path('admin_login_attempts') }}" class="nav-link">
+        <i class="bx bx-log-in-circle"></i> <span>Logs Connexion</span>
+    </a>
+</li>
+        </ul>
+    </div>
+</li>
+                    <ul class="nav flex-column" id="side-menu">
 
                         <li class="nav-item">
                             <a href="{{ path('dashboard') }}" class="nav-link {% if app.request.get('_route') == 'dashboard' %}active{% endif %} ">
                                 <i class="bx bx-home-circle"></i>
-                                <span>Dashboard</span>
+                                <span>Statistics</span>
                             </a>
                         </li>
 
@@ -326,6 +414,7 @@
                             </div>
                         </li>
                     </ul>
+                    
                 </div>
             </div>
         </div>
