@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Quartier n°{{ quartier.id }} - PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .quartier-info {
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .weather-item {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Rapport de Quartier</h1>
+        <p>Généré le {{ "now"|date("d/m/Y H:i") }}</p>
+    </div>
+    
+    <div class="quartier-info">
+        <h2>Quartier n°{{ quartier.id }} - {{ quartier.nom }}</h2>
+        <table>
+            <tr>
+                <th>Nom</th>
+                <td>{{ quartier.nom }}</td>
+            </tr>
+            <tr>
+                <th>Consommation Totale</th>
+                <td>
+                    {% set totalConsommation = 0 %}
+                    {% for lampadaire in lampadaires %}
+                        {% set totalConsommation = totalConsommation + lampadaire.consommation %}
+                    {% endfor %}
+                    {{ totalConsommation }} kWh
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <h2>Liste des Lampadaires</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Localisation</th>
+                <th>Consommation</th>
+                <th>État</th>
+                <th>Date d'installation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lampadaire in lampadaires %}
+            <tr>
+                <td>{{ lampadaire.localisation }}</td>
+                <td>{{ lampadaire.consommation }} kWh</td>
+                <td>
+                    {% if lampadaire.etat == 0 %}
+                        <span class="badge-success">Actif</span>
+                    {% else %}
+                        <span class="badge-danger">Inactif</span>
+                    {% endif %}
+                </td>
+                <td>{{ lampadaire.dateInstallation|date('d/m/Y') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        <p>© {{ "now"|date("Y") }} LampadairIntell - Système de Gestion Intelligente des Lampadaires</p>
+    </div>
+</body>
+</html>
