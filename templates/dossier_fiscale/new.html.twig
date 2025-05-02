@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>New DossierFiscale</title>
+
+{% block body %}
+    <h1>Create new DossierFiscale</h1>
+
+    {{ include('dossier_fiscale/_form.html.twig') }}
+
+    <a href="{{ path('app_dossier_fiscale_index') }}">back to list</a>
+{% endblock %}

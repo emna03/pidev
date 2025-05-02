@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Assistant IA - Smart City{% endblock %}
+
+{% block stylesheets %}
+<style>
+  body {
+    background-color: #f0f0f5;
+    font-family: 'Poppins', sans-serif;
+  }
+  .chat-container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    padding: 30px;
+  }
+  .chat-box {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #fafafa;
+    border-radius: 8px;
+  }
+  .message {
+    margin-bottom: 15px;
+  }
+  .message.user {
+    text-align: right;
+    color: #333;
+  }
+  .message.bot {
+    text-align: left;
+    color: #764ba2;
+    font-weight: 500;
+  }
+  .chat-form {
+    display: flex;
+    gap: 10px;
+  }
+  .chat-form input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .chat-form button {
+    background-color: #764ba2;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="chat-container">
+  <h2>🤖 Assistant CiviSmart - Smart City</h2>
+
+  <div class="chat-box" id="chatBox">
+    <div class="message bot">Bonjour ! Pose-moi tes questions sur les villes intelligentes 🌍</div>
+  </div>
+
+  <form id="chatForm" class="chat-form">
+    <input type="text" id="userInput" placeholder="Pose ta question..." required>
+    <button type="submit">Envoyer</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  const form = document.getElementById('chatForm');
+  const input = document.getElementById('userInput');
+  const chatBox = document.getElementById('chatBox');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const userMessage = input.value.trim();
+    if (!userMessage) return;
+
+    chatBox.innerHTML += `<div class="message user">${userMessage}</div>`;
+    input.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    const formData = new FormData();
+    formData.append('message', userMessage);
+
+    const response = await fetch('{{ path("app_chat_send") }}', {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+
+    chatBox.innerHTML += `<div class="message bot">${result.response}</div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+</script>
+{% endblock %}

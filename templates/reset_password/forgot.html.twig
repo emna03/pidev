@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>Mot de passe oublié</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .background {
+      width: 300px;
+      height: 400px;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      left: 50%;
+      top: 50%;
+    }
+
+    .background .shape {
+      height: 150px;
+      width: 150px;
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .shape:first-child {
+      background: linear-gradient(#1845ad, #23a2f6);
+      left: -60px;
+      top: -60px;
+    }
+
+    .shape:last-child {
+      background: linear-gradient(to right, #ff512f, #f09819);
+      right: -20px;
+      bottom: -60px;
+    }
+
+    .logo-wrapper {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 50px;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .logo-left, .logo-right {
+      width: 600px;
+      opacity: 0.2;
+    }
+
+    form {
+      width: 300px;
+      background-color: rgba(255, 255, 255, 0.13);
+      position: relative;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+      padding: 30px 25px;
+      color: #fff;
+      z-index: 2;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    form.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    form h3 {
+      font-size: 26px;
+      font-weight: 500;
+      line-height: 36px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    input[type="text"] {
+      display: block;
+      height: 40px;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.07);
+      border-radius: 3px;
+      padding: 0 8px;
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 300;
+      color: white;
+      border: none;
+      outline: none;
+    }
+
+    button[type="submit"] {
+      margin-top: 24px;
+      width: 100%;
+      background-color: #fff;
+      color: #080710;
+      padding: 10px 0;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+      transition: 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #ddd;
+    }
+
+    .alert {
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .alert-success {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+    }
+
+    .alert-danger {
+      background-color: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+    }
+
+    .modal-content {
+      background-color: #1e1e2f;
+      color: white;
+    }
+
+    .modal-header.bg-success {
+      background-color: #28a745 !important;
+    }
+
+    .btn-close {
+      filter: invert(1);
+    }
+        .error-msg {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="background">
+  <div class="shape"></div>
+  <div class="shape"></div>
+
+  <div class="logo-wrapper">
+    <img src="{{ asset('logo_civismart.png') }}" alt="Logo gauche" class="logo-left">
+    <img src="{{ asset('logo_civismart.png') }}" alt="Logo droite" class="logo-right">
+  </div>
+
+  <form method="post" class="fade-in">
+    <h3>🔐 Mot de passe oublié</h3>
+
+    {% for message in app.flashes('success') %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    <label for="email">Adresse e-mail</label>
+    <input type="text" name="email" id="email" placeholder="ex: email@example.com">
+    <button type="submit">Envoyer le code</button>
+
+    <p style="margin-top: 10px; text-align: center;">
+      <a href="{{ path('app_login') }}" style="color: #00f;">← Retour à la connexion</a>
+    </p>
+  </form>
+</div>
+
+<!-- ✅ Modal -->
+<div class="modal fade" id="mailSentModal" tabindex="-1" aria-labelledby="mailSentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content border-success">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="mailSentModalLabel">📬 Vérifie ta boîte mail</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        Un code a été envoyé à ton adresse e-mail. Clique sur le lien reçu ou utilise le code pour réinitialiser ton mot de passe.
+      </div>
+      <div class="modal-footer">
+        <a href="{{ path('app_login') }}" class="btn btn-success">Retour à la connexion</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  window.addEventListener("load", function () {
+    document.querySelector("form").classList.add("fade-in");
+
+    {% if app.flashes('mail_popup') %}
+      const modal = new bootstrap.Modal(document.getElementById('mailSentModal'));
+      modal.show();
+    {% endif %}
+  });
+   document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector("form");
+  const emailInput = document.getElementById("email");
+
+  form.addEventListener("submit", function (e) {
+    const emailValue = emailInput.value.trim();
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+    // Supprime les messages d'erreur existants
+    const existingError = document.querySelector(".error-msg");
+    if (existingError) {
+      existingError.remove();
+    }
+
+    // Vérifie si l'email est valide
+    if (!emailValue || !emailRegex.test(emailValue)) {
+      e.preventDefault(); // Empêche l'envoi du formulaire
+
+      // Affiche un message d'erreur
+      const errorMsg = document.createElement("div");
+      errorMsg.className = "error-msg";
+      errorMsg.style.color = "red";
+      errorMsg.style.marginBottom = "10px";
+      errorMsg.textContent = "Veuillez entrer une adresse e-mail valide.";
+      emailInput.parentNode.insertBefore(errorMsg, emailInput); // Insère avant le champ
+    }
+  });
+});
+</script>
+
+</body>
+</html>

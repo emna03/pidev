@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block title %}Paiement réussi{% endblock %}
+
+{% block body %}
+<div class="container py-5 text-center">
+    <h2 class="text-success">Paiement réussi !</h2>
+    <p>Votre dossier fiscal pour l'année {{ dossier_fiscale.anneeFiscale }} a été marqué comme payé.</p>
+    <a href="{{ path('app_dossier_fiscale_index') }}" class="btn btn-primary mt-3">Retour à mes dossiers</a>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+
+<title>Edit DossierFiscale</title>
+
+{% block body %}
+    <h1>Edit DossierFiscale</h1>
+
+    {{ include('dossier_fiscale/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_dossier_fiscale_index') }}">back to list</a>
+
+    {{ include('dossier_fiscale/_delete_form.html.twig') }}
+{% endblock %}

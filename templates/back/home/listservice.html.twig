@@ -1,0 +1,124 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+  body {
+    background-color: #f5f7fa;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .admin-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .admin-card-header {
+    background: linear-gradient(to right, #667eea, #764ba2);
+    color: white;
+    padding: 2rem;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+  }
+
+  .table thead th {
+    background-color: #f1f3f5;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .table-actions a {
+    margin: 0 0.3rem;
+    color: #333;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .table-actions a:hover {
+    transform: scale(1.2);
+  }
+
+  .badge {
+    font-size: 0.85rem;
+    padding: 0.5em 0.7em;
+  }
+
+  #searchForm {
+    margin-top: 1rem;
+  }
+
+  #searchForm input.form-control {
+    border-radius: 30px;
+    padding: 0.6rem 1rem;
+  }
+
+  #searchForm .input-group-text {
+    border-radius: 30px 0 0 30px;
+    background-color: #fff;
+    border-right: none;
+  }
+
+  #searchForm #searchInput {
+    border-left: none;
+  }
+</style>
+{% endblock %}
+
+{% block title %}Liste des Services d'Intervention{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Liste des Services d'Intervention</h1>
+
+        <!-- Ajouter le bouton d'ajout de service -->
+        <div class="text-end mb-3">
+            <a href="{{ path('add_service') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Ajouter un Service
+            </a>
+        </div>
+
+        {% if services is not empty %}
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nom du Service</th>
+                            <th>Type d'Intervention</th>
+                            <th>Zone d'Intervention</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in services %}
+                        <tr>
+                            <td>{{ service.nomService }}</td>
+                            <td>{{ service.typeIntervention }}</td>
+                            <td>{{ service.zoneIntervention }}</td>
+                            <td>
+                                <a href="{{ path('edit_service', { 'id': service.id }) }}" class="btn btn-outline-primary btn-sm">Modifier</a>
+                                <a href="{{ path('delete_service', { 'id': service.id }) }}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce service ?')">Supprimer</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-center">Aucun service d'intervention à afficher.</p>
+        {% endif %}
+    </div>
+{% endblock %}

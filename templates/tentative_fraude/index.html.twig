@@ -1,0 +1,35 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}TentativeFraude index{% endblock %}
+
+{% block body %}
+    <h1>TentativeFraude index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type_fraude</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tentative_fraude in tentative_fraudes %}
+            <tr>
+                <td>{{ tentative_fraude.id }}</td>
+                <td>{{ tentative_fraude.typeFraude }}</td>
+                <td>
+                    <a href="{{ path('app_tentative_fraude_show', {'id': tentative_fraude.id}) }}">show</a>
+                    <a href="{{ path('app_tentative_fraude_edit', {'id': tentative_fraude.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tentative_fraude_new') }}">Create new</a>
+{% endblock %}

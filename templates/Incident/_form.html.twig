@@ -1,0 +1,161 @@
+{{ form_start(form, {'attr': {'class': 'custom-form'}}) }}
+    <div class="row">
+    {% for field in form %}
+        {% if field.vars.name != '_token' %}
+            <div class="col-12 mb-3"
+                 {% if field.vars.name in ['latitude', 'longitude'] %} style="display: none;" {% endif %}>
+                {{ form_label(field, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                {{ form_widget(field, {
+                    'attr': {
+                        'class': 'form-control rounded-3 py-2',
+                        'id': 'incident_' ~ field.vars.name
+                    }
+                }) }}
+                {{ form_errors(field) }}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+<input type="hidden" id="incident_latitude" name="incident[latitude]" value="{{ form.latitude.vars.value }}">
+<input type="hidden" id="incident_longitude" name="incident[longitude]" value="{{ form.longitude.vars.value }}">
+
+
+<div id="map-container" style="display: none; margin-bottom: 20px;">
+    <div id="map" style="height: 400px;"></div>
+</div>
+
+{% block javascripts %}
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFUn6EuiuNTZ0TsETQ-BhCpmMcvOA7FME&callback=initMapWrapper"
+    async defer>
+</script>
+
+<script>
+    let mapInitialized = false;
+
+    function initMap() {
+        const defaultPosition = { lat: 36.8065, lng: 10.1815 };
+
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: defaultPosition,
+            zoom: 12,
+        });
+
+        const marker = new google.maps.Marker({
+            position: defaultPosition,
+            map: map,
+            draggable: true,
+        });
+
+        const geocoder = new google.maps.Geocoder();
+
+        const latInput = document.getElementById("incident_latitude");
+        const lngInput = document.getElementById("incident_longitude");
+        const localisationInput = document.getElementById("incident_localisation");
+
+        function geocodeLatLng(latlng) {
+            geocoder.geocode({ location: latlng }, (results, status) => {
+                if (status === "OK" && results[0]) {
+                    localisationInput.value = results[0].formatted_address;
+                    document.getElementById("current-address").textContent = results[0].formatted_address;
+                } else {
+                    localisationInput.value = "Adresse introuvable";
+                    document.getElementById("current-address").textContent = "Adresse introuvable";
+                }
+            });
+        }
+
+        // Initialisation avec position par défaut
+        latInput.value = defaultPosition.lat;
+        lngInput.value = defaultPosition.lng;
+        geocodeLatLng(defaultPosition);
+
+        // Événement de déplacement du curseur
+        marker.addListener("dragend", function () {
+            const pos = marker.getPosition();
+            latInput.value = pos.lat();
+            lngInput.value = pos.lng();
+            geocodeLatLng(pos);
+        });
+    }
+
+    // Initialise la carte UNIQUEMENT si le champ localisation est sélectionné
+    document.addEventListener("DOMContentLoaded", function () {
+        const localisationInput = document.getElementById("incident_localisation");
+        const mapContainer = document.getElementById("map-container");
+
+        localisationInput.addEventListener("focus", function () {
+            mapContainer.style.display = "block";
+            if (!mapInitialized && typeof google !== "undefined" && google.maps) {
+                initMap();
+                mapInitialized = true;
+            }
+        });
+
+        // Fermer la carte si on clique ailleurs
+        document.addEventListener("click", function (e) {
+            if (
+                e.target !== localisationInput &&
+                !mapContainer.contains(e.target)
+            ) {
+                mapContainer.style.display = "none";
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+    <div class="text-end">
+       <button type="submit" class="btn btn-rounded btn-dark box-shadow-7 font-weight-medium btn-swap-1" data-clone-element="1">
+	<span>{{ button_label|default('Enregistrer') }} <i class="fa-solid fa-check ms-2 p-relative left-10"></i></span>
+</button>
+        
+    </div>
+{{ form_end(form) }}
+
+<style>
+.custom-form .form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.custom-form .form-control {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.custom-form .form-control:focus {
+    border-color: #00a8ff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 168, 255, 0.1);
+}
+
+.custom-form .btn-primary {
+    background-color: #00a8ff;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.custom-form .btn-primary:hover {
+    background-color: #008ccf;
+}
+
+.btn-custom {
+    background-color: #28a745; /* Green color */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px; /* Pill shape */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-custom:hover {
+    background-color: #218838; /* Darker green */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+#incident_latitude,
+#incident_longitude {
+    display: none;
+}
+</style>

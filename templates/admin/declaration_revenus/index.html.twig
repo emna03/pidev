@@ -1,0 +1,267 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Gestion des Déclarations de Revenus{% endblock %}
+
+{% block stylesheet %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .admin-card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .admin-card-header {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table thead th {
+            background-color: #f1f3f5;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .btn-view {
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-view:hover {
+            background-color: #574b90;
+        }
+
+        .status-payé {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-en-attente {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .status-na {
+            color: grey;
+            font-weight: bold;
+        }
+
+        .btn-create {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .btn-create:hover {
+            background-color: #218838;
+        }
+
+        .filter-container {
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="card admin-card">
+        <div class="admin-card-header">
+            <h2>💼 Gestion des Déclarations de Revenus</h2>
+        </div>
+        <div class="card-body">
+            <div class="filter-container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="text" id="search-bar" class="form-control" placeholder="Rechercher...">
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control" id="status-filter">
+                            <option value="">Filtrer par statut</option>
+                            <option value="payé">Payé</option>
+                            <option value="en-attente">En Attente</option>
+                            <option value="non-créé">Non Créé</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="date" id="start-date" class="form-control" placeholder="Date début">
+                        <input type="date" id="end-date" class="form-control mt-2" placeholder="Date fin">
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover" id="declarations-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="id">ID <i class="fas fa-sort"></i></th>
+                            <th data-sort="montantRevenu">Montant (€) <i class="fas fa-sort"></i></th>
+                            <th>Source</th>
+                            <th data-sort="dateDeclaration">Date <i class="fas fa-sort"></i></th>
+                            <th>Preuve</th>
+                            <th>Utilisateur</th>
+                            <th>Status Dossier Fiscale</th>
+                            <th>Suspectée</th>
+                            <th>Fraude</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for declaration in declarations %}
+                            <tr>
+                                <td>{{ declaration.id }}</td>
+                                <td>{{ declaration.montantRevenu }}</td>
+                                <td>{{ declaration.sourceRevenu }}</td>
+                                <td>{{ declaration.dateDeclaration }}</td>
+                                <td>
+                                    {% if declaration.preuveRevenu %}
+                                        <a href="{{ asset(declaration.preuveRevenu) }}" target="_blank" class="btn btn-view">Voir</a>
+                                    {% else %}
+                                        <span class="text-muted">Aucune</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ declaration.user.nom }} {{ declaration.user.prenom }}</td>
+                                <td>
+                                    {% if declaration.idDossier %}
+                                        {% if declaration.idDossier.totalImpot == declaration.idDossier.totalImpotPaye %}
+                                            <span class="status-payé">✔️ Payé</span>
+                                        {% else %}
+                                            <span class="status-en-attente">En Attente</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-danger">Non créé</span><br>
+                                        <a href="{{ path('app_dossier_fiscale_new', { 'declarationId': declaration.id }) }}" class="btn btn-sm btn-success mt-1">Ajouter un dossier</a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if declaration.isSuspected %}
+                                        <span class="badge bg-danger">Oui</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Non</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#fraudeModal{{ declaration.id }}">
+                                        🚨 Signaler
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="fraudeModal{{ declaration.id }}" tabindex="-1" aria-labelledby="fraudeModalLabel{{ declaration.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <form method="post" action="{{ path('app_tentative_fraude_add', { 'declarationId': declaration.id }) }}">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="fraudeModalLabel{{ declaration.id }}">Signaler une tentative de fraude</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label for="typeFraude{{ declaration.id }}" class="form-label">Type de fraude</label>
+                                                            <select class="form-control" id="typeFraude{{ declaration.id }}" name="type_fraude" required>
+                                                                <option value="revenu_falsifié">Revenu falsifié</option>
+                                                                <option value="preuve_manquante">Preuve manquante</option>
+                                                                <option value="utilisateur_invalide">Utilisateur invalide</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-danger">Confirmer</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center">Aucune déclaration trouvée.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Sorting
+        document.querySelectorAll("th[data-sort]").forEach(function (header) {
+            header.addEventListener("click", function () {
+                var column = header.dataset.sort;
+                var rows = Array.from(document.querySelectorAll("#declarations-table tbody tr"));
+                var isAsc = header.classList.contains("asc");
+                rows.sort(function (rowA, rowB) {
+                    var valA = rowA.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim();
+                    var valB = rowB.querySelector(`td:nth-child(${header.cellIndex + 1})`).textContent.trim();
+                    return (isAsc ? valB.localeCompare(valA) : valA.localeCompare(valB));
+                });
+                isAsc ? header.classList.remove("asc") : header.classList.add("asc");
+                document.querySelector("tbody").innerHTML = rows.map(row => row.outerHTML).join("");
+            });
+        });
+
+        // Search and Filters
+        const searchBar = document.getElementById("search-bar");
+        const statusFilter = document.getElementById("status-filter");
+        const startDate = document.getElementById("start-date");
+        const endDate = document.getElementById("end-date");
+
+        searchBar.addEventListener("input", filterRows);
+        statusFilter.addEventListener("change", filterRows);
+        startDate.addEventListener("change", filterRows);
+        endDate.addEventListener("change", filterRows);
+
+        function filterRows() {
+            let query = searchBar.value.toLowerCase();
+            let status = statusFilter.value;
+            let start = startDate.value;
+            let end = endDate.value;
+            
+            let rows = Array.from(document.querySelectorAll("#declarations-table tbody tr"));
+            rows.forEach(function (row) {
+                let id = row.querySelector("td:nth-child(1)").textContent;
+                let montant = row.querySelector("td:nth-child(2)").textContent;
+                let source = row.querySelector("td:nth-child(3)").textContent;
+                let date = row.querySelector("td:nth-child(4)").textContent;
+
+                let matchesSearch = id.includes(query) || montant.includes(query) || source.toLowerCase().includes(query) || date.includes(query);
+                let matchesStatus = !status || row.querySelector(".status-" + status) !== null;
+                let matchesDate = (!start || new Date(date) >= new Date(start)) && (!end || new Date(date) <= new Date(end));
+
+                if (matchesSearch && matchesStatus && matchesDate) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}
