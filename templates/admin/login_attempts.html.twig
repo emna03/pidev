@@ -1,0 +1,44 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}🔐 Tentatives de connexion{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="mb-4">🛡️ Historique des tentatives de connexion</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>👤 Utilisateur</th>
+                    <th>🕒 Date & Heure</th>
+                    <th>🌍 IP</th>
+                    <th>📍 Localisation</th>
+                    <th>🧭 Navigateur</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in logs %}
+                    <tr>
+                        <td>{{ attempt.utilisateur.email }}</td>
+                        <td>{{ attempt.attemptedAt|date('d/m/Y H:i') }}</td>
+                        <td>{{ attempt.ipAddress }}</td>
+                        <td>
+                            {{ attempt.city ?? 'N/A' }},
+                            {{ attempt.region ?? 'N/A' }},
+                            {{ attempt.country ?? 'N/A' }}
+                        </td>
+                        <td>
+                            <small>{{ attempt.userAgent|slice(0, 80) ~ '...' }}</small>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">Aucune tentative enregistrée.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -3,54 +3,72 @@
 {% block title %}Quartiers publics{% endblock %}
 
 {% block body %}
-<div class="container py-4">
-    <h1 class="mb-4 text-center">Liste des Quartiers</h1>
-
-    <!-- 🔍 Formulaire de recherche -->
-    <form method="get" class="row g-3 align-items-end mb-4">
-        <div class="col-md-4">
-            <label for="search" class="form-label">Nom du Quartier :</label>
-            <input type="text" id="search" name="search" class="form-control" value="{{ search ?? '' }}">
-        </div>
-        <div class="col-md-3">
-            <label for="min" class="form-label">Consommation min :</label>
-            <input type="number" name="min" id="min" class="form-control" value="{{ min ?? 0 }}">
-        </div>
-        <div class="col-md-3">
-            <label for="max" class="form-label">Consommation max :</label>
-            <input type="number" name="max" id="max" class="form-control" value="{{ max ?? 5000 }}">
-        </div>
-        <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn btn-primary w-100">Filtrer</button>
-            <a href="{{ path('app_quartier_show_all') }}" class="btn btn-outline-secondary w-100">Réinitialiser</a>
-        </div>
-    </form>
-
-    {% if quartiers is not empty %}
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for quartier in quartiers %}
-                <div class="col">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ quartier.nom }}</h5>
-                            <p><strong>ID :</strong> #{{ quartier.id }}</p>
-                            <p><strong>Consommation Totale :</strong> {{ quartier.consomTot }} kWh</p>
-                            <p><strong>Nombre de Lampadaires :</strong> {{ quartier.lampadaireCount }}</p>
-                            <a href="{{ path('app_quartier_show', {'id': quartier.id}) }}" class="btn btn-outline-primary btn-sm mt-2">Voir les détails</a>
+<div class="body">
+    <div role="main" class="main px-3 px-lg-5">
+        <div class="container mt-5">
+            <div class="page-header py-0 px-3 px-xl-0 border-radius-2 p-relative mb-5" style="background-color:rgb(166, 146, 253)">
+                <div class="overflow-hidden p-absolute top-0 left-0 bottom-0 h-100 w-100">
+                    <div class="custom-el-5 custom-pos-4">
+                        <img class="img-fluid opacity-2 opacity-hover-2" src="{{ asset('img/demos/accounting-1/svg/waves.svg') }}" alt="">
+                    </div>
+                </div>
+                <div class="container p-relative z-index-1 py-2">
+                    <div class="row align-items-center py-4">
+                        <div class="col-8 col-md-7">
+                            <div class="appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="0">
+                                <span class="badge bg-color-dark-rgba-10 text-light rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-3">
+                                    <span class="d-inline-flex py-1 px-2">Quartiers</span>
+                                </span>
+                            </div>
+                            <div class="appear-animation" data-appear-animation="fadeIn" data-appear-animation-delay="200">
+                                <h1 class="text-dark text-9 text-lg-12 font-weight-semibold line-height-1 mb-2">Liste des Quartiers</h1>
+                            </div>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-        
-        {# Add pagination controls #}
-        <div class="pagination-container">
-            <div class="pagination custom-pagination-style-1 pagination-rounded">
-                {{ knp_pagination_render(quartiers) }}
+            </div>
+
+            <!-- 📦 Liste des quartiers -->
+            <div class="card shadow-sm p-4 border-0 rounded-4">
+                {% if quartiers is not empty %}
+                    <div class="row">
+                        {% for quartier in quartiers %}
+                            <div class="col-lg-4 col-md-4 col-sm-12 mb-4 pb-1">
+                                <div class="box-shadow-7 border-radius-2 overflow-hidden">
+                                    <span class="thumb-info thumb-info-no-overlay thumb-info-show-hidden-content-hover">
+                                        <span class="thumb-info-wrapper overlay overlay-show overlay-gradient-bottom-content border-radius-0 rounded-top">
+                                            <a href="{{ path('app_quartier_show', {'id': quartier.id}) }}" title="Voir Détails">
+                                                <img src="https://dummyimage.com/600x400/cccccc/000000&text={{ quartier.lampadaireCount }}+Lampadaires" alt="{{ quartier.lampadaireCount }} Lampadaires" class="img-fluid rounded" style="max-width: 100%;">
+                                            </a>
+                                        </span>
+                                        <span class="thumb-info-content">
+                                            <span class="thumb-info-content-inner bg-light p-4">
+                                                <h4 class="text-5 mb-2">{{ quartier.nom }}</h4>
+                                                <p class="line-height-7 text-3 mb-3"><strong>ID :</strong> #{{ quartier.id }}</p>
+                                                <p class="line-height-7 text-3 mb-3"><strong>Consommation Totale :</strong> {{ quartier.consomTot }} kWh</p>
+                                                <p class="line-height-7 text-3 mb-3"><strong>Nombre de Lampadaires :</strong> {{ quartier.lampadaireCount }}</p>
+                                                <div class="mt-3">
+                                                    <a href="{{ path('app_quartier_show', {'id': quartier.id}) }}" class="btn btn-primary btn-sm">Voir Détails <i class="fas fa-arrow-right ms-2"></i></a>
+                                                </div>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-container">
+                        <div class="pagination custom-pagination-style-1 pagination-rounded">
+                            {{ knp_pagination_render(quartiers) }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info text-center mt-4">Aucun quartier trouvé.</div>
+                {% endif %}
             </div>
         </div>
-    {% else %}
-        <div class="alert alert-info text-center mt-4">Aucun quartier trouvé.</div>
-    {% endif %}
+    </div>
 </div>
 {% endblock %}

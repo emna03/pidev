@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    {{ include('shared/header.html.twig') }}
+    {{ include('shared/declaration_slider.html.twig') }}
+    <title>Dossier Fiscal - Index</title>
+
+    {% block body %}
+    <body>
+    <!-- Liste des Dossiers Fiscaux -->
+        <div class="container py-5 bg-light-5 border-radius-2 p-4">
+    <h2 class="text-center mb-5 text-dark">Mes Dossiers Fiscaux</h2>
+    <div class="row">
+        {% for dossier_fiscale in dossier_fiscales %}
+            <div class="col-lg-4 mb-4">
+                <div class="card rounded-3 border-0 bg-light box-shadow-10 box-shadow-1-hover anim-hover-translate-top-10px transition-3ms h-100">
+                    <div class="card-body p-4">
+                        <span class="badge bg-secondary text-uppercase mb-2">Année {{ dossier_fiscale.anneeFiscale }}</span>
+                        <h5 class="card-title text-dark">Statut : {{ dossier_fiscale.status }}</h5>
+                        <p class="card-text text-3-5 mb-1">
+                            <strong>Total Impôt :</strong> {{ dossier_fiscale.totalImpot }} TND<br>
+                            <strong>Payé :</strong> {{ dossier_fiscale.totalImpotPaye }} TND<br>
+                            <strong>Créé le :</strong> {{ dossier_fiscale.dateCreation }}<br>
+                            <strong>Paiement :</strong> {{ dossier_fiscale.moyenPayement }}
+                        </p>
+                        <div class="mt-3">
+                            <a href="{{ path('app_dossier_fiscale_show', {'id': dossier_fiscale.id}) }}" class="btn btn-sm btn-primary me-2">Voir</a>
+
+                            {% if dossier_fiscale.totalImpot > dossier_fiscale.totalImpotPaye %}
+                                <button class="btn btn-sm btn-success" onclick="window.location.href='{{ path('app_dossier_fiscale_paiement', { token: dossier_fiscale.token }) }}'">
+                                    Payer ici
+                                </button>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>  
+</div>
+
+        <!-- Vue d’Ensemble -->
+        <div class="mb-5 bg-light-5 py-5 border-radius-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <span class="badge bg-gradient-light-primary-rgba-20 text-secondary rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-4">
+                            <span class="d-inline-flex py-1 px-2">Déclaration</span>
+                        </span>
+                        <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Vue d’Ensemble</h2>
+                        <p>
+                            La déclaration de revenus permet aux citoyens de soumettre leurs informations financières annuelles en toute simplicité. 
+                            Elle garantit transparence et conformité avec les obligations fiscales, tout en centralisant les données importantes pour une gestion efficace.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-lg-6 mb-4 pe-lg-5">
+                        <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Notre Objectif</h2>
+                        <p>
+                            Faciliter la déclaration en ligne grâce à une interface intuitive, une sécurité renforcée et un traitement automatisé des données fiscales.
+                            Les utilisateurs peuvent joindre leurs justificatifs, consulter l'historique de leurs déclarations et suivre l'évolution de leur situation.
+                        </p>
+                        <p>
+                            Un système intelligent d’alertes permet de notifier les échéances, erreurs ou documents manquants, assurant un service fluide et complet.
+                        </p>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <h2 class="text-7 font-weight-semibold line-height-1 mb-4">Résultats Attendus</h2>
+                        <ul class="list list-icons list-icons-lg list-icons-style-3 text-3-5">
+                            <li><i class="fas fa-check bg-color-dark-rgba-10 text-color-before-secondary"></i> Processus de déclaration simplifié</li>
+                            <li><i class="fas fa-check bg-color-dark-rgba-10 text-color-before-secondary"></i> Données fiscales plus précises</li>
+                            <li><i class="fas fa-check bg-color-dark-rgba-10 text-color-before-secondary"></i> Gain de temps pour l'administration et les citoyens</li>
+                        </ul>
+
+                        <div class="appear-animation mt-4" data-appear-animation="blurIn" data-appear-animation-delay="300">
+                            <div class="d-flex align-items-center pt-4">
+                                <strong class="d-inline-flex text-12 text-dark n-ls-5">95%</strong>
+                                <div class="p-2 ps-3">
+                                    <img src="img/demos/accounting-1/icons/icon-4.svg" width="48" alt="" data-icon data-plugin-options="{'onlySVG': true, 'extraClass': 'svg-fill-color-primary'}" />
+                                </div>
+                            </div>
+                            <span class="custom-font-tertiary text-7 text-dark n-ls-1 fst-italic">Conformité Améliorée</span>
+                            <p class="mb-0 pt-2 text-3-5 line-height-7">Grâce à l'automatisation et à la surveillance intelligente des dossiers fiscaux.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+    </body>
+    {% endblock %}
+</html>
+{{ include('shared/footer.html.twig') }}

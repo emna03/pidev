@@ -1,0 +1,154 @@
+{% extends 'base_admin.html.twig' %}
+{% block stylesheets %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+  body {
+    background-color: #f5f7fa;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .admin-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .admin-card-header {
+    background: linear-gradient(to right, #667eea, #764ba2);
+    color: white;
+    padding: 2rem;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+  }
+
+  .table thead th {
+    background-color: #f1f3f5;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .table-actions a {
+    margin: 0 0.3rem;
+    color: #333;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .table-actions a:hover {
+    transform: scale(1.2);
+  }
+
+  .badge {
+    font-size: 0.85rem;
+    padding: 0.5em 0.7em;
+  }
+
+  #searchForm {
+    margin-top: 1rem;
+  }
+
+  #searchForm input.form-control {
+    border-radius: 30px;
+    padding: 0.6rem 1rem;
+  }
+
+  #searchForm .input-group-text {
+    border-radius: 30px 0 0 30px;
+    background-color: #fff;
+    border-right: none;
+  }
+
+  #searchInput {
+    border-left: none;
+  }
+</style>
+{% endblock %}
+{% block title %}Gestion des Incidents{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Liste des Incidents</h1>
+<h3>Statistiques des incidents par niveau de danger</h3>
+<ul>
+    <li style="color: green">Faible (0) : {{ countByDanger[0] }}</li>
+    <li style="color: orange">Moyen (1) : {{ countByDanger[1] }}</li>
+    <li style="color: red">Élevé (2) : {{ countByDanger[2] }}</li>
+    <li style="color: darkred">Critique (3) : {{ countByDanger[3] }}</li>
+</ul>
+        {% if incidents is not empty %}
+          <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Image</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Localisation</th>
+                         <th>Statut</th>
+                        <th>Service Affecté</th>
+                                                <th>nom de citoyen</th>
+
+                       <th>action</th>
+
+                      
+                    </tr>
+                </thead>
+   <tbody>
+  {% for incident in incidents %}
+    <tr>
+        <td>
+            <img src="{{ asset('uploads/' ~ incident.image) }}" alt="Image de l'incident" width="100">
+        </td>
+        <td>{{ incident.typeIncident }}</td>
+        <td>{{ incident.description }}</td>
+        <td>{{ incident.localisation }}</td>
+        <td>{{ incident.statut }}</td>
+        <td>{{ incident.serviceAffecte ? incident.serviceAffecte.nomService : 'Non affecté' }}</td>
+        <td>{{ incident.user.nom }} {{ incident.user.prenom }}</td>
+        <td>
+            <a href="{{ path('incident_editstatu', { 'id': incident.id }) }}"
+               class="btn btn-sm
+               {% if incident.statut == 'En attente' %}
+                 {% if incident.dangerLevel == 1 %}btn-warning
+                 {% elseif incident.dangerLevel == 2 %}btn-danger
+                 {% elseif incident.dangerLevel == 3 %}btn-light text-danger border-danger
+                 {% endif %}
+               {% else %}
+                 btn-outline-secondary
+               {% endif %}">
+                Traité
+            </a>
+        </td>
+    </tr>
+  {% endfor %}
+</tbody>
+
+<style>
+  .btn-light.text-danger.border-danger:hover {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+  }
+</style>
+
+          
+            </table>
+               </div>
+        {% else %}
+            <p class="text-center">Aucun incident à afficher.</p>
+        {% endif %}
+    </div>
+{% endblock %}

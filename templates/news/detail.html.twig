@@ -1,0 +1,140 @@
+{{ include('shared/header.html.twig') }}
+
+<style>
+    .full-article {
+        max-width: 100%;
+        padding: 60px;
+        background-color: #fdfdfd;
+        font-family: 'Segoe UI', sans-serif;
+        color: #2c3e50;
+    }
+
+    .full-article img {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin: 30px 0;
+    }
+
+    .full-article h1 {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .full-article p {
+        font-size: 18px;
+        line-height: 1.8;
+        margin-bottom: 15px;
+    }
+
+    .meta-info {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+    .full-article a.btn-primary {
+        display: inline-block;
+        margin-top: 30px;
+        background-color: #6c63ff;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        border-radius: 6px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .full-article a.btn-primary:hover {
+        background-color: #554be1;
+    }
+</style>
+
+<div class="body">    
+    <div role="main" class="main px-3 px-lg-5">
+
+        <div class="page-header py-0 px-3 px-xl-0 border-radius-2 p-relative mb-5" style="background-color:rgb(166, 146, 253)">
+            <div class="overflow-hidden p-absolute top-0 left-0 bottom-0 h-100 w-100">
+                <div class="custom-el-5 custom-pos-4">
+                    <img class="img-fluid opacity-2 opacity-hover-2" src="img/demos/accounting-1/svg/waves.svg" alt="">
+                </div>
+            </div>                    
+            <div class="container p-relative z-index-1 py-2">
+                <div class="row align-items-center py-4">
+                    <div class="col-8 col-md-7">
+                        <div class="appear-animation" data-appear-animation="fadeInRightShorter" data-appear-animation-delay="0">
+                            <span class="badge bg-color-dark-rgba-10 text-light rounded-pill text-uppercase font-weight-semibold text-2-5 px-3 py-2 px-4 mb-3"><span class="d-inline-flex py-1 px-2">What We Do</span></span>
+                        </div>
+                        <div class="appear-animation" data-appear-animation="fadeIn" data-appear-animation-delay="200">
+                            <h1 class="text-dark text-9 text-lg-12 font-weight-semibold line-height-1 mb-2">Actualités</h1>
+                        </div>
+                        <div class="appear-animation" data-appear-animation="fadeIn" data-appear-animation-delay="200">
+                            <ul class="breadcrumb d-flex text-3-5 font-weight-semi-bold pb-2 mb-3">
+                                <li><a href="{{ path('app_home') }}" class="text-dark text-decoration-none">Home</a></li>
+                                <li><a href="{{ path('news_index') }}" class="text-dark text-decoration-none">Actualités</a></li>
+                                <li class="active">Article détails</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="full-article">
+    {% if news %}
+        <h1>{{ news.title }}</h1>
+
+        {% if news.creator is defined and news.creator|length > 0 %}
+            <p class="meta-info">🖊️ Auteur : {{ news.creator[0] }}</p>
+        {% endif %}
+
+        {% if news.pubDate is defined %}
+            <p class="meta-info">📅 Publié le : {{ news.pubDate|date('d/m/Y H:i') }}</p>
+        {% endif %}
+
+        {% if news.image_url %}
+            <img src="{{ news.image_url }}" alt="{{ news.title }}">
+        {% endif %}
+
+        {% if news.description is defined %}
+            <p style="background-color: #f9f9f9; padding: 20px; border-radius: 8px; font-size: 18px; color: #333; line-height: 1.6;">
+                {{ news.description }}
+            </p>
+        {% endif %}
+
+
+        {% if news.keywords|length > 0 %}
+            <p><strong>Mots-clés :</strong> {{ news.keywords|join(', ') }}</p>
+        {% endif %}
+
+        {% if news.category|length > 0 %}
+            <p><strong>Catégorie :</strong> {{ news.category|join(', ') }}</p>
+        {% endif %}
+
+        {% if news.country|length > 0 %}
+            <p><strong>Pays :</strong> {{ news.country|join(', ') }}</p>
+        {% endif %}
+
+        {% if news.language %}
+            <p><strong>Langue :</strong> {{ news.language }}</p>
+        {% endif %}
+
+        {% if news.source_name %}
+            <p><strong>Source :</strong> {{ news.source_name }}</p>
+        {% endif %}
+
+
+
+        <a href="{{ news.link }}" target="_blank" class="btn btn-primary">🔗 Lire l'article complet</a>
+    {% else %}
+        <p style="font-size: 20px;">Article introuvable.</p>
+    {% endif %}
+</div>
+
+{{ include('shared/footer.html.twig') }}

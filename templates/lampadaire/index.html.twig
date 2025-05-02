@@ -1,4 +1,4 @@
-{% extends 'baseBack.html.twig' %}
+{% extends 'base_admin.html.twig' %}
 
 {% block title %}Streetlight Management{% endblock %}
 
@@ -87,6 +87,12 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Pagination -->
+                    <div class="mt-4 d-flex justify-content-center">
+                        {{ knp_pagination_render(lampadaires) }}
+                    </div>
+
                 {% else %}
                     <div class="text-center py-5">
                         <p class="text-muted mb-3">No streetlights found for the selected filter.</p>

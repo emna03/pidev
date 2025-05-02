@@ -1,0 +1,271 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">📈 Statistiques Complètes</h2>
+
+    <!-- KPIs -->
+    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="card p-3 bg-light">
+                <h6>Total Dossiers</h6>
+                <p class="display-6 fw-bold text-primary">{{ dossiers|length }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 bg-light">
+                <h6>Total Impôt Payé</h6>
+                <p class="display-6 fw-bold text-success">
+                    {{ dossiers|map(d => d.totalImpotPaye)|reduce((a, b) => a + b) }}
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 bg-light">
+                <h6>Total Impôt à Payer</h6>
+                <p class="display-6 fw-bold text-danger">
+                    {{ dossiers|map(d => d.totalImpot - d.totalImpotPaye)|reduce((a, b) => a + b) }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Charts -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h6>Impôts: Payé vs Non Payé</h6>
+                <canvas id="impotBar"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h6>Impôt Total vs Payé dans le Temps</h6>
+                <canvas id="lineImpot"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h6>Courbe des Déclarations (Revenus dans le temps)</h6>
+                <canvas id="declarationsLine"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extra Charts -->
+    <div class="row align-items-stretch">
+    <!-- Moyens de Paiement -->
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm p-3 h-100">
+            <h6>Moyens de Paiement</h6>
+            <canvas id="paymentPie"></canvas>
+        </div>
+    </div>
+
+    <!-- Histogramme des Revenus -->
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm p-3 h-100">
+            <h6>Histogramme des Revenus</h6>
+            <canvas id="revenueHistogram"></canvas>
+        </div>
+    </div>
+
+    <!-- Répartition des Sources de Revenus -->
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm p-3 h-100">
+            <h6>Sources de Revenus</h6>
+            <canvas id="sourcesPie"></canvas>
+        </div>
+    </div>
+
+    <!-- Moyenne Mensuelle des Revenus -->
+    <div class="col-md-3 mb-3">
+        <div class="card shadow-sm p-3 h-100">
+            <h6>Moyenne Mensuelle des Revenus</h6>
+            <canvas id="monthlyAverageLine"></canvas>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- Dernières Déclarations -->
+    <div class="card mt-4 p-3">
+        <h4>Dernières Déclarations</h4>
+        <ul>
+            {% for decl in declarations|slice(-5) %}
+                <li>
+                    📅 {{ decl.dateDeclaration }} | 💰 {{ decl.montantRevenu }} TND | 
+                    Source: {{ decl.sourceRevenu }}
+                </li>
+            {% else %}
+                <li>Aucune déclaration disponible.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const dossiers = {{ dossiers|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }};
+    const declarations = {{ declarations|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }};
+
+    // Bar Chart - Impôts
+    const paid = dossiers.filter(d => d.status === 'Payé').length;
+    const unpaid = dossiers.length - paid;
+
+    new Chart(document.getElementById('impotBar'), {
+        type: 'bar',
+        data: {
+            labels: ['Payé', 'Non Payé'],
+            datasets: [{
+                label: 'Nombre de Dossiers',
+                data: [paid, unpaid],
+                backgroundColor: ['#4CAF50', '#F44336']
+            }]
+        }
+    });
+
+    // Pie Chart - Moyens de Paiement
+    const paymentMethods = {};
+    dossiers.forEach(d => {
+        const method = d.moyenPayement || 'Inconnu';
+        paymentMethods[method] = (paymentMethods[method] || 0) + 1;
+    });
+
+    new Chart(document.getElementById('paymentPie'), {
+        type: 'pie',
+        data: {
+            labels: Object.keys(paymentMethods),
+            datasets: [{
+                label: 'Moyens de Paiement',
+                data: Object.values(paymentMethods),
+                backgroundColor: ['#2196F3', '#FF9800', '#9C27B0', '#00BCD4']
+            }]
+        }
+    });
+
+    // Line Chart - Total Impôt vs Payé
+    const labelsTime = dossiers.map(d => d.dateCreation);
+    const totalImpotData = dossiers.map(d => d.totalImpot);
+    const totalImpotPayeData = dossiers.map(d => d.totalImpotPaye);
+
+    new Chart(document.getElementById('lineImpot'), {
+        type: 'line',
+        data: {
+            labels: labelsTime,
+            datasets: [
+                {
+                    label: 'Total Impôt',
+                    data: totalImpotData,
+                    borderColor: '#4CAF50',
+                    fill: false
+                },
+                {
+                    label: 'Total Payé',
+                    data: totalImpotPayeData,
+                    borderColor: '#F44336',
+                    fill: false
+                }
+            ]
+        }
+    });
+
+    // Line Chart - Déclarations de Revenus dans le Temps
+    const declLabels = declarations.map(d => d.dateDeclaration);
+    const declRevenus = declarations.map(d => d.montantRevenu);
+
+    new Chart(document.getElementById('declarationsLine'), {
+        type: 'line',
+        data: {
+            labels: declLabels,
+            datasets: [{
+                label: 'Revenus Déclarés',
+                data: declRevenus,
+                borderColor: '#673AB7',
+                backgroundColor: 'rgba(103, 58, 183, 0.2)',
+                fill: true
+            }]
+        }
+    });
+    // Histogramme des Revenus
+new Chart(document.getElementById('revenueHistogram'), {
+    type: 'bar',
+    data: {
+        labels: declarations.map(d => d.dateDeclaration),
+        datasets: [{
+            label: 'Montant',
+            data: declarations.map(d => d.montantRevenu),
+            backgroundColor: '#00bcd4'
+        }]
+    },
+    options: {
+        scales: {
+            x: { ticks: { autoSkip: true, maxTicksLimit: 5 } },
+            y: { beginAtZero: true }
+        }
+    }
+});
+
+// Pie - Sources de Revenus
+const sources = {};
+declarations.forEach(d => {
+    const source = d.sourceRevenu || 'Autre';
+    sources[source] = (sources[source] || 0) + 1;
+});
+
+new Chart(document.getElementById('sourcesPie'), {
+    type: 'pie',
+    data: {
+        labels: Object.keys(sources),
+        datasets: [{
+            data: Object.values(sources),
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50']
+        }]
+    }
+});
+
+// Moyenne Mensuelle des Revenus
+const monthlyGroups = {};
+declarations.forEach(d => {
+    const [year, month] = d.dateDeclaration.split('-');
+    const key = `${year}-${month}`;
+    monthlyGroups[key] = monthlyGroups[key] || [];
+    monthlyGroups[key].push(d.montantRevenu);
+});
+
+const monthlyLabels = Object.keys(monthlyGroups).sort();
+const monthlyAverages = monthlyLabels.map(key => {
+    const sum = monthlyGroups[key].reduce((a, b) => a + b, 0);
+    return (sum / monthlyGroups[key].length).toFixed(2);
+});
+
+new Chart(document.getElementById('monthlyAverageLine'), {
+    type: 'line',
+    data: {
+        labels: monthlyLabels,
+        datasets: [{
+            label: 'Moyenne Mensuelle',
+            data: monthlyAverages,
+            borderColor: '#9C27B0',
+            backgroundColor: 'rgba(156, 39, 176, 0.2)',
+            fill: true
+        }]
+    }
+});
+
+
+</script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+{% endblock %}

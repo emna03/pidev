@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}CiviSmart Admin{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Admin Panel" name="description" />
+    <meta content="CiviSmart" name="author" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('admin_template/images/favicon.ico') }}">
+
+    <!-- CSS -->
+    <link href="{{ asset('admin_template/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin_template/css/icons.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin_template/css/app.min.css') }}" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary-color: rgb(124, 42, 247);
+            --secondary-color: #858796;
+            --success-color: #1cc88a;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --light-color: #f8f9fc;
+            --dark-color: #5a5c69;
+            --text-primary: rgb(2, 3, 4);
+            --text-secondary: #8492a6;
+            --bg-sidebar: rgb(98, 14, 176);
+            --bg-sidebar-active: #34495e;
+        }
+
+        body {
+            background-color: var(--light-color);
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .vertical-menu {
+            background: linear-gradient(180deg, var(--bg-sidebar) 0%, var(--bg-sidebar-active) 100%);
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            padding: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .navbar-brand {
+            padding: 1.5rem 1rem;
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .menu-title {
+            padding: 0.8rem 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-link {
+            padding: 0.8rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .nav-link.active {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .nav-link i {
+            margin-right: 0.8rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e3e6f0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            padding: 2px;
+        }
+
+        .dropdown-toggle {
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+        }
+
+        .dropdown-toggle:hover,
+        .dropdown-toggle:focus {
+            color: var(--primary-color);
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            border-radius: 0.35rem;
+        }
+
+        .dropdown-item {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+
+        .dropdown-item i {
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 992px) {
+            .vertical-menu {
+                left: -250px;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            body.sidebar-enable .vertical-menu {
+                left: 0;
+            }
+
+            body.sidebar-enable .main-content {
+                margin-left: 250px;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .nav-link,
+        .dropdown-item {
+            transition: all 0.2s ease;
+        }
+
+        .nav-item .nav-link[data-bs-toggle="collapse"]::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item .nav-link[data-bs-toggle="collapse"][aria-expanded="true"]::after {
+            transform: rotate(180deg);
+        }
+
+        .sub-menu {
+            padding-left: 2.5rem;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .sub-menu .nav-link {
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+        }
+        /* Modifier le style pour le bouton de profil */
+#toggleProfile {
+    position: fixed; /* Positionnement fixe par rapport à la fenêtre */
+    top: 20px; /* Espacement du haut */
+    right: 20px; /* Espacement de la droite */
+    z-index: 9999; /* Assurez-vous qu'il est au-dessus des autres éléments */
+}
+
+    </style>
+
+    {% block stylesheet %}{% endblock %}
+        {% include 'chat/chat_widget.html.twig' %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div id="layout-wrapper">
+        <!-- Sidebar -->
+        <div class="vertical-menu">
+            <a href="#" class="navbar-brand">
+                <i class="bx bx-bridge"></i> CiviSmart
+            </a>
+
+            <div class="h-100">
+                <div id="sidebar-menu">
+                    <ul class="nav flex-column" id="side-menu">
+                        <li class="menu-title">MENU</li>
+
+                        <li class="nav-item">
+                            <a href="{{ path('app_admin_dashboard') }}" class="nav-link {% if app.request.get('_route') == 'app_admin_dashboard' %}active{% endif %}">
+                                <i class="bx bx-home-circle"></i> <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#userSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-user"></i>
+                                <span>Gestion Fiscale</span>
+                            </a>
+                            <div class="collapse" id="userSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a href="{{path('admin_declaration_revenus_index')}}" class="nav-link">declarations fiscaux</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{path('admin_dossier_fiscale_index')}}" class="nav-link">Dossiers fiscaux</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#settingSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-cog"></i>
+                                <span>incident</span>
+                            </a>
+                            <div class="collapse" id="settingSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a href="{{ path('app_admin_home') }}" class="nav-link">Incident</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ path('list_service') }}" class="nav-link">Service</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#userSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-user"></i> <span>Lampadaire</span>
+                            </a>
+                            <div class="collapse" id="userSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                                                       <li class="nav-item"><a href="{{ path('app_lampadaire_index') }}" class="nav-link">Liste</a></li> 
+                                    <li class="nav-item"><a href="{{ path('app_lampadaire_new') }}" class="nav-link">Ajouter</a></li> 
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#quartierSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-briefcase"></i> <span>Quartier</span>
+                            </a>
+                            <div class="collapse" id="quartierSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                                                      <li class="nav-item"><a href="{{ path('app_quartier_index') }}" class="nav-link">Liste</a></li> 
+                                     <li class="nav-item"><a href="{{ path('app_quartier_new') }}" class="nav-link">Ajouter</a></li> 
+                                     <li class="nav-item"><a href="{{ path('app_statistiques') }}" class="nav-link">Statistique</a></li> 
+
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+    <a href="#utilisateurSubmenu" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="utilisateurSubmenu">
+        <i class="bx bx-user"></i> <span>Utilisateurs</span>
+    </a>
+    <div class="collapse" id="utilisateurSubmenu">
+        <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+                <a href="{{ path('admin_users') }}" class="nav-link">
+                    <i class="bx bx-group"></i> utilisateurs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ path('admin_statistiques') }}" class="nav-link">
+                    <i class="bx bx-chart"></i> Statistiques
+                </a>
+            </li>
+            <li class="nav-item">
+    <a href="{{ path('admin_login_attempts') }}" class="nav-link">
+        <i class="bx bx-log-in-circle"></i> <span>Logs Connexion</span>
+    </a>
+</li>
+        </ul>
+    </div>
+</li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="main-content">
+            <header class="header">
+                <div class="d-flex justify-content-between align-items-center">
+        <!-- Bouton pour afficher/masquer le profil -->
+<!-- Bouton profil Bootstrap stylé -->
+<button id="toggleProfile" class="btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-1 rounded-pill shadow-sm">
+    <i class="bi bi-person-circle fs-4"></i>
+    <span class="fw-semibold">Profil</span>
+</button>
+
+
+            </header>
+
+            <div class="container-fluid mt-4">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="{{ asset('admin_template/libs/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('admin_template/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('admin_template/libs/metismenu/metisMenu.min.js') }}"></script>
+    <script src="{{ asset('admin_template/libs/simplebar/simplebar.min.js') }}"></script>
+    <script src="{{ asset('admin_template/libs/node-waves/waves.min.js') }}"></script>
+
+    <script>
+        document.getElementById('vertical-menu-btn').addEventListener('click', function () {
+            document.body.classList.toggle('sidebar-enable');
+            if (window.innerWidth >= 992) {
+                document.body.classList.toggle('vertical-collpsed');
+            }
+        });
+
+        if (window.innerWidth < 992) {
+            document.body.classList.add('vertical-collpsed');
+        }
+    </script>
+
+    {% block javascript %}{% endblock %}
+     <!-- Inclure le popup de profil -->
+    {% include 'utilisateur/_profile_popup.html.twig' %}
+
+    <!-- Votre script JS pour activer le popup -->
+</body>
+</html>
