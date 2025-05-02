@@ -1,15 +1,15 @@
 <?php
-// src/Form/CamionCollecteType.php
-
 namespace App\Form;
 
-use App\Entity\CamionCollecte;
+use App\Entity\Zone;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Entity\CamionCollecte;
 
 class CamionCollecteType extends AbstractType
 {
@@ -30,8 +30,13 @@ class CamionCollecteType extends AbstractType
                 ],
                 'attr' => ['class' => 'form-control']
             ])
-            ->add('zoneId', NumberType::class, [
-                'label' => 'Zone ID',
+            ->add('zoneId', EntityType::class, [
+                'class' => Zone::class,
+                'choice_label' => 'location',
+                'label' => 'Zone',
+                'placeholder' => 'Choisissez une zone',
+                'required' => true,
+                'mapped' => false, // Manually handle this in the controller
                 'attr' => ['class' => 'form-control']
             ])
             ->add('modele', TextType::class, [

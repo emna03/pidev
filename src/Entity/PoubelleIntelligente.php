@@ -38,7 +38,6 @@ class PoubelleIntelligente
     private float $longitude;
 
     #[ORM\Column(type: 'integer')]
-    #[Assert\NotBlank]
     private int $zoneId;
 
     public function __construct()

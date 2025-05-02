@@ -29,9 +29,7 @@ class CamionCollecte
     private $statut;
 
     #[ORM\Column(type: 'integer', name: 'zone_id')]
-    #[Assert\NotBlank(message: "L'ID de zone ne peut pas être vide")]
-    #[Assert\Type(type: 'integer', message: "L'ID de zone doit être un entier")]
-    #[Assert\Positive(message: "L'ID de zone doit être positif")]
+
     private $zoneId;
 
     #[ORM\Column(type: 'string', length: 100)]
