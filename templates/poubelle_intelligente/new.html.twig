@@ -1,0 +1,232 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Créer une Poubelle Intelligente{% endblock %}
+
+{% block stylesheet %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <style>
+        #map {
+            width: 100%;
+            height: 350px;
+            border-radius: 8px;
+            margin-bottom: 1.2em;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .card-header {
+            border-radius: 0 !important;
+            padding: 1.25rem 1.5rem;
+        }
+        .form-control {
+            border-radius: 5px;
+            padding: 12px 15px;
+        }
+        .btn {
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        label {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        /* Slider styles */
+        .custom-slider-wrapper {
+            margin-bottom: 1.5rem;
+        }
+        .custom-slider-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .custom-slider-value {
+            font-weight: bold;
+            min-width: 36px;
+            display: inline-block;
+            text-align: right;
+        }
+        .custom-slider-icon {
+            font-size: 1.5rem;
+            transition: color 0.2s;
+        }
+        .slider-fill-low {
+            color: #388e3c;
+        }
+        .slider-fill-medium {
+            color: #ff8f00;
+        }
+        .slider-fill-high {
+            color: #d32f2f;
+        }
+        input[type="range"].custom-slider {
+            width: 100%;
+            accent-color: #673ab7;
+            margin-top: 8px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h5 mb-0">
+                        <i class="fas fa-trash-alt mr-2"></i>Créer une Poubelle Intelligente
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="mb-4">
+
+                            {{ form_row(form.type_dechets) }}
+
+                            <div class="custom-slider-wrapper">
+                                <label class="custom-slider-label" for="niveau-remplissage-slider">
+                                    Niveau de remplissage :
+                                    <span class="custom-slider-value" id="niveau-remplissage-value"></span>
+                                    <span class="custom-slider-icon" id="niveau-remplissage-icon"></span>
+                                </label>
+                                <input type="range"
+                                       min="0" max="100" step="1"
+                                       id="niveau-remplissage-slider"
+                                       class="custom-slider"
+                                       value="{{ form.niveau_remplissage.vars.value ?? 0 }}">
+                                {# On garde le champ Symfony caché pour la soumission #}
+                                {{ form_widget(form.niveau_remplissage, {'attr': {'style': 'display:none'}}) }}
+                                {% if form_errors(form.niveau_remplissage) %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form_errors(form.niveau_remplissage) }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {{ form_row(form.localisation) }}
+
+                            <label><b>Choisissez l'emplacement sur la carte</b></label>
+                            <div id="map"></div>
+
+                            <div class="row">
+                                <div class="col">
+                                    {{ form_row(form.latitude) }}
+                                </div>
+                                <div class="col">
+                                    {{ form_row(form.longitude) }}
+                                </div>
+                            </div>
+
+                            {{ form_row(form.zoneId) }}
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save mr-2"></i>Créer
+                            </button>
+                            <a href="{{ path('app_poubelle_intelligente_index') }}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left mr-2"></i>Retour
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- SLIDER DYNAMIQUE ---
+        const slider = document.getElementById('niveau-remplissage-slider');
+        const valueSpan = document.getElementById('niveau-remplissage-value');
+        const iconSpan = document.getElementById('niveau-remplissage-icon');
+        const hiddenInput = document.getElementById('{{ form.niveau_remplissage.vars.id }}');
+
+        function updateSliderUI(val) {
+            valueSpan.textContent = val + ' %';
+            hiddenInput.value = val;
+
+            if (val > 80) {
+                iconSpan.innerHTML = '<i class="fas fa-battery-full"></i>';
+                iconSpan.className = 'custom-slider-icon slider-fill-high';
+            } else if (val > 50) {
+                iconSpan.innerHTML = '<i class="fas fa-battery-half"></i>';
+                iconSpan.className = 'custom-slider-icon slider-fill-medium';
+            } else if (val > 20) {
+                iconSpan.innerHTML = '<i class="fas fa-battery-quarter"></i>';
+                iconSpan.className = 'custom-slider-icon slider-fill-medium';
+            } else {
+                iconSpan.innerHTML = '<i class="fas fa-battery-empty"></i>';
+                iconSpan.className = 'custom-slider-icon slider-fill-low';
+            }
+        }
+
+        // Initialisation
+        updateSliderUI(slider.value);
+
+        slider.addEventListener('input', function() {
+            updateSliderUI(this.value);
+        });
+
+        // --- LEAFLET MAP ---
+        let latInput = document.getElementById('{{ form.latitude.vars.id }}');
+        let lngInput = document.getElementById('{{ form.longitude.vars.id }}');
+
+        let lat = parseFloat(latInput.value) || 36.8065;
+        let lng = parseFloat(lngInput.value) || 10.1815;
+        let map = L.map('map').setView([lat, lng], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+
+        let marker = L.marker([lat, lng], {draggable: true}).addTo(map);
+
+        function updateLatLngFields(lat, lng) {
+            latInput.value = lat.toFixed(8);
+            lngInput.value = lng.toFixed(8);
+        }
+
+        map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+            updateLatLngFields(e.latlng.lat, e.latlng.lng);
+        });
+
+        marker.on('dragend', function(e) {
+            let pos = marker.getLatLng();
+            updateLatLngFields(pos.lat, pos.lng);
+        });
+
+        latInput.addEventListener('change', function() {
+            let latVal = parseFloat(latInput.value);
+            let lngVal = parseFloat(lngInput.value);
+            if (!isNaN(latVal) && !isNaN(lngVal)) {
+                marker.setLatLng([latVal, lngVal]);
+                map.setView([latVal, lngVal]);
+            }
+        });
+        lngInput.addEventListener('change', function() {
+            let latVal = parseFloat(latInput.value);
+            let lngVal = parseFloat(lngInput.value);
+            if (!isNaN(latVal) && !isNaN(lngVal)) {
+                marker.setLatLng([latVal, lngVal]);
+                map.setView([latVal, lngVal]);
+            }
+        });
+    });
+    </script>
+{% endblock %}

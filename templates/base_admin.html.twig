@@ -318,6 +318,35 @@
                                 </ul>
                             </div>
                         </li>
+                        <li class="nav-item">
+                            <a href="#applicationSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-file"></i>
+                                <span>Déchet</span>
+                            </a>
+                            <div class="collapse" id="applicationSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a href="{{ path('app_poubelle_intelligente_index') }}" class="nav-link">List déchet</a>
+                                    </li>
+                                  
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#settingSubmenu" class="nav-link" data-bs-toggle="collapse">
+                                <i class="bx bx-cog"></i>
+                                <span>Camion</span>
+                            </a>
+                            <div class="collapse" id="settingSubmenu">
+                                <ul class="nav flex-column sub-menu">
+                                    <li class="nav-item">
+                                        <a href="{{ path('app_camion_collecte_index') }}" class="nav-link">List de camion</a>
+                                    </li>
+                                
+                                </ul>
+                            </div>
+                        </li>
 
                         <li class="nav-item">
     <a href="#utilisateurSubmenu" class="nav-link" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="utilisateurSubmenu">
