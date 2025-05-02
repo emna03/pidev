@@ -138,7 +138,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, Dec
         Request $request,
         DeclarationRevenus $declarationRevenus,
         EntityManagerInterface $entityManager,
-        DossierFiscaleRepository $dossierFiscaleRepo
+        DossierfiscaleRepository $dossierFiscaleRepo
     ): Response {
         // Check if CSRF token is valid
         if ($this->isCsrfTokenValid('delete' . $declarationRevenus->getId(), $request->request->get('_token'))) {
@@ -166,7 +166,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, Dec
 
 
     #[Route('/admin/dossier', name: 'admin_dossier_fiscale_index', methods: ['GET'])]
-    public function adminIndex(DossierFiscaleRepository $dossierFiscaleRepository): Response
+    public function adminIndex(DossierfiscaleRepository $dossierFiscaleRepository): Response
     {
         return $this->render('admin/dossier_fiscale/index.html.twig', [
             'dossiers' => $dossierFiscaleRepository->findAll(),
@@ -223,7 +223,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, Dec
     #[Route('/create-checkout-session/{token}', name: 'create_checkout_session')]
     public function createCheckoutSession(
         string $token,
-        DossierFiscaleRepository $repo,
+        DossierfiscaleRepository $repo,
         HttpClientInterface $client
     ): Response {
         $dossierFiscale = $repo->findOneBy(['token' => $token]);
@@ -268,7 +268,7 @@ public function new(Request $request, EntityManagerInterface $entityManager, Dec
         return $this->json(['id' => $session->id]);
     }
     #[Route('/paiement-success/{token}', name: 'paiement_success')]
-    public function paiementSuccess(string $token, DossierFiscaleRepository $dossierFiscaleRepository,EntityManagerInterface $en): Response
+    public function paiementSuccess(string $token, DossierfiscaleRepository $dossierFiscaleRepository,EntityManagerInterface $en): Response
     {
         // Find the DossierFiscale by token
         $dossierFiscale = $dossierFiscaleRepository->findOneBy(['token' => $token]);

@@ -107,6 +107,10 @@
     </div>
 </div>
 
+{% include "home/index2.html.twig" with {
+    count_valide: count_valide,
+    count_rejete: count_rejete
+} %}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\LoginAttemptRepository;
+use App\Entity\Documentadministratif;
 
 
 #[Route('/admin')]
@@ -119,7 +120,7 @@ public function index(Request $request, UtilisateurRepository $userRepository): 
     #[Route('/dashboard', name: 'app_admin_dashboard')]
     public function dashboard(
         DossierFiscaleRepository $dossierFiscaleRepository,
-        DeclarationRevenusRepository $declarationRevenusRepository
+        DeclarationRevenusRepository $declarationRevenusRepository,EntityManagerInterface $entityManager
     ): Response {
         $dossiers = $dossierFiscaleRepository->findAll();
         $declarations = $declarationRevenusRepository->findAll();  
@@ -143,9 +144,32 @@ public function index(Request $request, UtilisateurRepository $userRepository): 
                 'is_suspected' => $declaration->getIsSuspected(),
             ];
         }
+
+      // Calculate counts for "Validé" and "Rejeté"
+      $countValide = $entityManager->getRepository(Documentadministratif::class)
+      ->createQueryBuilder('d')
+      ->select('COUNT(d.id)')
+      ->where('d.status = :status')
+      ->setParameter('status', 'Validé')
+      ->getQuery()
+      ->getSingleScalarResult();
+  
+  $countRejete = $entityManager->getRepository(Documentadministratif::class)
+      ->createQueryBuilder('d')
+      ->select('COUNT(d.id)')
+      ->where('d.status = :status')
+      ->setParameter('status', 'Rejeté')
+      ->getQuery()
+      ->getSingleScalarResult();
+  
+       
+
+
         return $this->render('admin/dashboard.html.twig', [
             'dossiers' => $dossiersArray,
             'declarations' => $declarationArray,
+            'count_valide' => $countValide,
+            'count_rejete' => $countRejete,
         ]);
     }
 

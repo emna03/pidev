@@ -37,13 +37,13 @@ $countRejete = $entityManager->getRepository(Documentadministratif::class)
     ->getQuery()
     ->getSingleScalarResult();
 
-return $this->render('home/index2.html.twig', [
-    'count_valide' => $countValide, // Pass counts to the template
-    'count_rejete' => $countRejete,
-]);
-        return $this->render('home/index2.html.twig');
-    }
-    
+    return $this->render('home/index2.html.twig', [
+        'count_valide' => $countValide,
+        'count_rejete' => $countRejete,
+    ]);
+}
+
+
     #[Route('/', name: 'home')]
     public function index3(): Response
     {

@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -97,6 +96,7 @@ final class DeclarationRevenusController extends AbstractController
         'form' => $form->createView(),
     ]);
 }
+
     #[Route('/extract-ocr', name: 'app_declaration_extract_ocr', methods: ['POST'])]
     public function extractOCR(Request $request, SluggerInterface $slugger): JsonResponse
     {
@@ -112,6 +112,8 @@ final class DeclarationRevenusController extends AbstractController
     
         $absolutePath = $this->getParameter('kernel.project_dir') . '/public/' . $filePath;
         $ocr = new TesseractOCR($absolutePath);
+        $ocr->executable('C:\\Program Files\\Tesseract-OCR\\tesseract.exe');
+
         $extractedText = $ocr->run();
     
         $source = $this->guessSourceFromText($extractedText);
@@ -230,7 +232,7 @@ final class DeclarationRevenusController extends AbstractController
 
 
     
-    #[Route('/{id}', name: 'app_declaration_revenus_show', methods: ['GET'])]
+    #[Route('/{id<\d+>}', name: 'app_declaration_revenus_show', methods: ['GET'])]
     public function show(DeclarationRevenus $declarationRevenu): Response
     {
         $user = $this->getUser();

@@ -1,6 +1,6 @@
 
 ###> symfony/framework-bundle ###
-/.env.local
+/.env.local 
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
@@ -13,8 +13,7 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
-.env
-/.env
+## deleting the .inv file to share it to grant that informations will never be lost
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 /phpunit.xml

@@ -11,6 +11,8 @@ parameters:
     python_path: '%env(PYTHON_PATH)%'
     python_script_dir: '%env(PYTHON_SCRIPT_DIR)%'
     python_script_timeout: '%env(int:PYTHON_SCRIPT_TIMEOUT)%'
+    STRIPE_SECRET_KEY: '%env(STRIPE_SECRET_KEY)%'
+    STRIPE_PUBLIC_KEY: '%env(STRIPE_PUBLIC_KEY)%'
     Symfony\Component\Finder\Finder: ~
 
 services:

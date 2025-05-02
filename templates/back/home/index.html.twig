@@ -116,7 +116,7 @@
         <td>{{ incident.description }}</td>
         <td>{{ incident.localisation }}</td>
         <td>{{ incident.statut }}</td>
-        <td>{{ incident.serviceAffecte ? incident.serviceAffecte.nomService : 'Non affecté' }}</td>
+        <td>{{ incident.serviceAffecte ? incident.serviceAffecte.getNom_service : 'Non affecté' }}</td> 
         <td>{{ incident.user.nom }} {{ incident.user.prenom }}</td>
         <td>
             <a href="{{ path('incident_editstatu', { 'id': incident.id }) }}"

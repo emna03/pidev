@@ -96,40 +96,74 @@ public function translate(Request $request): JsonResponse
     #[Route('/api/python/query', name: 'api_python_query', methods: ['POST'])]
     public function query(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        // Validate input
-        if (empty($data['query'])) {
-            return $this->json(['error' => 'Missing query parameter'], 400);
-        }
-
-        // Execute query script
-        $result = $this->executePythonScript(
-            'Test',
-            [$data['query']],
-            null,
-            [],
-            $this->getParameter('python_script_dir')
-        );
-
-        // Handle response
-        if (!$result['success']) {
-            return $this->json([
-                'error' => 'Query failed',
-                'details' => $result['error']
-            ], 500);
+        try {
+            // Log incoming request content
+            $rawContent = $request->getContent();
+            $this->logger->info('Incoming request content: ' . $rawContent);
+    
+            // Decode JSON
+            $data = json_decode($rawContent, true);
+            
+            // Check for JSON decoding errors
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $this->logger->error('JSON decoding error: ' . json_last_error_msg());
+                return $this->json(['error' => 'Invalid JSON format'], 400);
+            }
+    
+            // Validate input
+            if (empty($data['query'])) {
+                $this->logger->warning('Missing query parameter');
+                return $this->json(['error' => 'Missing query parameter'], 400);
+            }
+    
+            // Log query execution attempt
+            $this->logger->info('Executing Python script with query: ' . $data['query']);
+    
+            // Execute script
+            $result = $this->executePythonScript3(
+                'Test',
+                [$data['query']],
+                null,
+                [],
+                $this->getParameter('python_script_dir')
+            );
+    
+            // Check script result
+            if (!$result['success']) {
+                $this->logger->error('Python script failed: ' . $result['error']);
+                return $this->json([
+                    'error' => 'Query failed',
+                    'details' => $result['error']
+                ], 500);
+            }
+    
+            // Log final response
+            $this->logger->info('Python script response: ' . $result['output']);
+             // Validate encoding before creating response
+        if (!mb_check_encoding($result['output'], 'UTF-8')) {
+            $this->logger->warning('Fixing invalid UTF-8 in output');
+            $result['output'] = mb_convert_encoding(
+                $result['output'],
+                'UTF-8',
+                'UTF-8',
+                'IGNORE' // Discard invalid characters
+            );
         }
 
         return $this->json([
             'query' => $data['query'],
             'response' => trim($result['output'])
         ]);
+        } catch (\Exception $e) {
+            $this->logger->critical('Unexpected error: ' . $e->getMessage());
+            return $this->json(['error' => 'Internal server error'], 500);
+        }
     }
 
     
 
 
-    
+
     #[Route('/api/python/image', name: 'api_python_image', methods: ['POST'])]
     public function addFromImage(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {

@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\DossierFiscaleRepository;
+use App\Repository\DossierfiscaleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Uid\Uuid;
-#[ORM\Entity(repositoryClass: DossierFiscaleRepository::class)]
+#[ORM\Entity(repositoryClass: DossierfiscaleRepository::class)]
 class DossierFiscale
 {
     #[ORM\Id]

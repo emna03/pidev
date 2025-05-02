@@ -2,6 +2,12 @@
 
 {% block body %}
 {# Statistics Cards #}
+<style>.header{display: none;}</style>
+<center>
+<h1>
+Statistique des documents administratifs ! 
+</h1>
+</center> <br/>
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="card text-white shadow" style="background-color: #8a50c2;"> {# Lighter Purple #}
@@ -26,7 +32,7 @@
             Statistiques des Documents
         </div>
         <div class="card-body">
-            <canvas id="statusChart" width="400" height="200"></canvas>
+            <canvas id="statusChart" width="200" height="100"></canvas>
         </div>
     </div>
 <script>
@@ -45,7 +51,11 @@
                 data: [countValide, countRejete],
                 backgroundColor: ['#6f42c1', '#5a32a3'],
                 borderColor: ['#5a32a3', '#3b1b6b'],
-                borderWidth: 1
+                borderWidth: 1,
+                barThickness: 120, // Fixed width in pixels
+                categoryPercentage: 0.2, // Controls space distribution (0-1)
+                barPercentage: 2 // Controls bar width within category (0-1)
+            
             }]
         },
         options: {
