@@ -23,5 +23,8 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+<<<<<<< HEAD
 /python.*
 /python-face-api.*
+=======
+>>>>>>> origin/integration_SSMEA
