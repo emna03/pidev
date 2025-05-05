@@ -4,10 +4,66 @@
 
 {% block body %}
 <div class="container-fluid mt-4">
-    <h2 class="mb-4">📈 Statistiques Complètes</h2>
+   
 
+    <!-- KPIs Resume -->
+    <div class="row text-center mb-4">
+         <h2 class="mb-4">📈 Statistiques Utilisateurs</h2>
+        <div class="col-md-3">
+            <div class="card p-3 bg-light">
+                <h6>Total Utilisateurs</h6>
+                <p id="totalUsers" class="display-6 fw-bold text-primary">...</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 bg-light">
+                <h6>Actifs</h6>
+                <p id="totalActifs" class="display-6 fw-bold text-success">...</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 bg-light">
+                <h6>Inactifs</h6>
+                <p id="totalInactifs" class="display-6 fw-bold text-danger">...</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 bg-light">
+                <h6>Ce Mois</h6>
+                <p id="totalMois" class="display-6 fw-bold text-info">...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <div class="card-body">
+                    <div id="chart-role"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <div class="card-body">
+                    <div id="chart-status"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <div class="card-body">
+                    <div id="chart-monthly"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <!-- KPIs -->
     <div class="row text-center">
+        <h2 class="mb-4">📈 Statistiques Impot</h2>
+
         <div class="col-md-4">
             <div class="card p-3 bg-light">
                 <h6>Total Dossiers</h6>
@@ -258,6 +314,49 @@ new Chart(document.getElementById('monthlyAverageLine'), {
 });
 
 
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+fetch('/api/statistics/users')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('totalUsers').textContent = data.active + data.inactive;
+    document.getElementById('totalActifs').textContent = data.active;
+    document.getElementById('totalInactifs').textContent = data.inactive;
+    document.getElementById('totalMois').textContent = data.monthly[data.monthly.length - 1]?.count || 0;
+
+    new ApexCharts(document.querySelector("#chart-role"), {
+      chart: { type: 'donut', animations: { enabled: true } },
+      series: Object.values(data.roles),
+      labels: Object.keys(data.roles),
+      title: { text: 'Répartition par rôle' },
+      dataLabels: { enabled: true },
+      legend: { position: 'bottom' },
+      colors: ['#6f42c1', '#198754']
+    }).render();
+
+    new ApexCharts(document.querySelector("#chart-status"), {
+      chart: { type: 'pie' },
+      series: [data.active, data.inactive],
+      labels: ['Actifs', 'Inactifs'],
+      title: { text: 'Statut des comptes' },
+      legend: { position: 'bottom' },
+      colors: ['#28a745', '#dc3545']
+    }).render();
+
+    new ApexCharts(document.querySelector("#chart-monthly"), {
+      chart: {
+        type: 'bar',
+        toolbar: { show: false },
+        animations: { enabled: true, easing: 'easeinout', speed: 500 }
+      },
+      series: [{ name: 'Inscriptions', data: data.monthly.map(m => m.count) }],
+      xaxis: { categories: data.monthly.map(m => m.month) },
+      title: { text: 'Inscriptions mensuelles' },
+      colors: ['#775DD0']
+    }).render();
+  });
 </script>
 {% endblock %}
 

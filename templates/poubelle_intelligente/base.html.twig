@@ -1,0 +1,11 @@
+{# templates/poubelle_intelligente/base.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Poubelles Intelligentes{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Gestion des Poubelles Intelligentes</h1>
+        {% block poubelle_intelligente_body %}{% endblock %}
+    </div>
+{% endblock %}

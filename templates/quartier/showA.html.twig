@@ -1,0 +1,153 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Détails du Quartier{% endblock %}
+
+{% block stylesheet %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .clickable-row {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Détails du Quartier</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Quartier n°{{ quartier.id }}
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr><th>Nom</th><td>{{ quartier.nom ?? 'Non spécifié' }}</td></tr>
+                    <tr><th>Consommation Totale</th><td>{{ quartier.consomTot ?? 0 }} kWh</td></tr>
+                </tbody>
+            </table>
+            <a href="{{ path('app_quartier_index') }}" class="btn btn-secondary mt-3">← Retour à la liste</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">Liste des Lampadaires (cliquez pour localiser)</div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Localisation</th>
+                        <th>Consommation</th>
+                        <th>État</th>
+                        <th>Date d'installation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lamp in lampadaires %}
+                        <tr class="clickable-row"
+                            data-localisation="{{ lamp.localisation|e('html_attr') }}"
+                            data-consommation="{{ lamp.consommation }}"
+                            data-etat="{{ lamp.etat ? 'Actif' : 'Inactif' }}">
+                            <td>{{ lamp.localisation }}</td>
+                            <td>{{ lamp.consommation }} kWh</td>
+                            <td>
+                                {% if lamp.etat %}
+                                    <span class="badge bg-success">Actif</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactif</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ lamp.dateInstallation ? lamp.dateInstallation|date('d/m/Y') : '—' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% if lampadaires is not empty %}
+        <h3>Carte des Lampadaires</h3>
+        <div id="map"></div>
+
+    
+    {% else %}
+        <p class="text-muted">Aucun lampadaire enregistré pour ce quartier.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([36.8065, 10.1815], 13); // par défaut : Tunis
+        let markers = [];
+        let bounds = L.latLngBounds();
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Load all lampadaires at initialization
+        const lampadaireRows = document.querySelectorAll('.clickable-row');
+        let geocodedCount = 0;
+        let totalRows = lampadaireRows.length;
+
+        lampadaireRows.forEach(row => {
+            const localisation = row.dataset.localisation;
+            const consommation = row.dataset.consommation;
+            const etat = row.dataset.etat;
+
+            const query = encodeURIComponent(localisation);
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const lat = data[0].lat;
+                        const lon = data[0].lon;
+
+                        const marker = L.marker([lat, lon]).addTo(map)
+                            .bindPopup(`<strong>${localisation}</strong><br>Conso: ${consommation} kWh<br>État: ${etat}`);
+                        
+                        // Store marker and extend bounds
+                        markers.push(marker);
+                        bounds.extend([lat, lon]);
+                        
+                        // Store reference to marker in row element
+                        row._marker = marker;
+                    }
+                    
+                    // Increment counter and check if all geocoding is done
+                    geocodedCount++;
+                    if (geocodedCount === totalRows && markers.length > 0) {
+                        // Fit map to show all markers
+                        if (markers.length > 1) {
+                            map.fitBounds(bounds, {
+                                padding: [50, 50] // Add padding for better visibility
+                            });
+                        } else if (markers.length === 1) {
+                            map.setView(markers[0].getLatLng(), 15);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Erreur lors du géocodage :", error);
+                    geocodedCount++;
+                });
+        });
+
+        // Keep click functionality to focus on a specific lampadaire
+        document.querySelectorAll('.clickable-row').forEach(row => {
+            row.addEventListener('click', () => {
+                if (row._marker) {
+                    row._marker.openPopup();
+                    map.setView(row._marker.getLatLng(), 16);
+                }
+            });
+        });
+    </script>
+{% endblock %}

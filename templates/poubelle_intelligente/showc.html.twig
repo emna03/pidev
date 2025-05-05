@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la Poubelle{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Détails de la Poubelle ID: {{ poubelle.id }}</h1>
+
+    <ul class="list-group mt-4">
+        <li class="list-group-item"><strong>Type de déchets:</strong> {{ poubelle.typeDechets }}</li>
+        <li class="list-group-item"><strong>Niveau de remplissage:</strong> {{ poubelle.niveauRemplissage }}%</li>
+        <li class="list-group-item"><strong>Localisation:</strong> {{ poubelle.localisation ?? 'Non spécifiée' }}</li>
+        <li class="list-group-item"><strong>Coordonnées:</strong> {{ poubelle.latitude }}, {{ poubelle.longitude }}</li>
+        <li class="list-group-item"><strong>Zone ID:</strong> {{ poubelle.zoneId ?? 'Non spécifiée' }}</li>
+    </ul>
+
+    <a href="{{ path('app_cytoine_poubelle_list') }}" class="btn btn-secondary mt-3">⬅ Retour à la liste</a>
+</div>
+{% endblock %}

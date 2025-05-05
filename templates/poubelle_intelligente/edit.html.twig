@@ -1,0 +1,142 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Modifier Poubelle Intelligente{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .purple-theme {
+            background: linear-gradient(135deg, #f5f7ff 0%, #f5effb 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        
+        .card-header {
+            background: linear-gradient(90deg, #7e57c2 0%, #673ab7 100%);
+            color: white;
+            border: none;
+        }
+        
+        .btn-purple {
+            background-color: #673ab7;
+            border-color: #5e35b1;
+            color: white;
+        }
+        
+        .btn-purple:hover {
+            background-color: #5e35b1;
+            border-color: #512da8;
+            color: white;
+        }
+        
+        .btn-outline-purple {
+            color: #673ab7;
+            border-color: #673ab7;
+        }
+        
+        .btn-outline-purple:hover {
+            background-color: #673ab7;
+            color: white;
+        }
+        
+        .page-title {
+            color: #512da8;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #673ab7;
+            padding-bottom: 0.5rem;
+        }
+        
+        .edit-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(103, 58, 183, 0.1);
+            border: none;
+        }
+        
+        .form-control:focus {
+            border-color: #9575cd;
+            box-shadow: 0 0 0 0.25rem rgba(149, 117, 205, 0.25);
+        }
+        
+        .form-label {
+            color: #5e35b1;
+            font-weight: 500;
+        }
+        
+        .action-btn {
+            min-width: 120px;
+            margin: 0 5px;
+        }
+        
+        .badge-purple {
+            background-color: #673ab7;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="purple-theme">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="page-title">
+                    <i class="fas fa-edit me-2"></i>Modifier la Poubelle Intelligente
+                    <span class="badge badge-purple">#{{ poubelle_intelligente.id }}</span>
+                </h1>
+            </div>
+        </div>
+        
+        <div class="card edit-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-pencil-alt me-2"></i>Formulaire de modification
+                </h5>
+            </div>
+            <div class="card-body">
+                {{ include('poubelle_intelligente/_form.html.twig', {
+                    'button_label': 'Mettre à jour',
+                    'button_class': 'btn-purple'
+                }) }}
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-between">
+            <a href="{{ path('app_poubelle_intelligente_index') }}" class="btn btn-outline-purple action-btn">
+                <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+            </a>
+            
+            {{ include('poubelle_intelligente/_delete_form.html.twig', {
+                'button_class': 'btn-danger'
+            }) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any custom form validation or interactions if needed
+            const niveauInput = document.getElementById('poubelle_intelligente_niveauRemplissage');
+            if (niveauInput) {
+                niveauInput.addEventListener('input', function() {
+                    const value = this.value;
+                    const feedback = document.getElementById('niveau-feedback');
+                    
+                    if (value > 80) {
+                        feedback.textContent = 'Niveau critique!';
+                        feedback.className = 'text-danger';
+                    } else if (value > 50) {
+                        feedback.textContent = 'Niveau moyen';
+                        feedback.className = 'text-warning';
+                    } else {
+                        feedback.textContent = 'Niveau normal';
+                        feedback.className = 'text-success';
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

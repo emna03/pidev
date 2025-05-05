@@ -13,8 +13,7 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
-.env
-/.env
+
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 /phpunit.xml
@@ -24,8 +23,5 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
-# Ignorer le modèle ONNX trop lourd
-python-face-api/arcfaceresnet100-8.onnx
-
-# Ignorer l’environnement virtuel Python
-venv/
+/python.*
+/python-face-api.*

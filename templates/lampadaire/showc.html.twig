@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Lampadaire{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">Détails du Lampadaire</h1>
+
+<div class="card">
+    <div class="card-header">
+        Lampadaire n°{{ lampadaire.id }}
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th scope="row">ID</th>
+                    <td>{{ lampadaire.id }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Localisation</th>
+                    <td>{{ lampadaire.localisation }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Quartier</th>
+                    <td>{{ lampadaire.quartier.nom ?? 'Non spécifié' }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Date d'installation</th>
+                    <td>{{ lampadaire.dateInstallation|date('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">État</th>
+                    <td>
+                        {% if lampadaire.etat %}
+                            <span class="badge bg-success">Fonctionnel</span>
+                        {% else %}
+                            <span class="badge bg-danger">Hors service</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Consommation</th>
+                    <td>{{ lampadaire.consommation }} kWh</td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="{{ path('citizen_lampadaire_index') }}" class="btn btn-secondary">← Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}

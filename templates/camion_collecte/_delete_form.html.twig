@@ -1,0 +1,8 @@
+{# templates/camion_collecte/_delete_form.html.twig #}
+
+<form method="post" action="{{ path('app_camion_collecte_delete', {'id': camion_collecte.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce camion?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ camion_collecte.id) }}">
+    <button class="btn btn-sm btn-danger">
+        <i class="fas fa-trash"></i> Supprimer
+    </button>
+</form>

@@ -8,6 +8,8 @@ use App\Form\DossierFiscaleType;
 use App\Repository\DeclarationRevenusRepository;
 use App\Repository\DossierFiscaleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Stripe\Checkout\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,48 +65,75 @@ final class DossierFiscaleController extends AbstractController
     }
     
     #[Route('/new', name: 'app_dossier_fiscale_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager, DeclarationRevenusRepository $declarationRepo): Response
-{
-    $dossier = new DossierFiscale();
-    $declarationId = $request->query->get('declarationId');
-
-    if ($declarationId) {
-        $declaration = $declarationRepo->find($declarationId);
-        if ($declaration) {
-            // Set the necessary fields for the dossier
-            $dossier->setIdUser($declaration->getUser());
-            $this->calculertaxe($declaration);
-            $dossier->setTotalImpot($this->calculertaxe($declaration));
-            $dossier->setTotalImpotPaye(0);
-            $dossier->setAnneeFiscale((new \DateTime($declaration->getDateDeclaration()))->format('Y'));
-            $dossier->setStatus('non payé');
-            $dossier->setMoyenPayement('');
-            $dossier->setIdDeclaration($declaration); 
-            $dossier->setDateCreation((new \DateTime())->format('Y-m-d'));
+    public function new(Request $request, EntityManagerInterface $entityManager, DeclarationRevenusRepository $declarationRepo, MailerInterface $mailer): Response
+    {
+        $dossier = new DossierFiscale();
+        $declarationId = $request->query->get('declarationId');
+    
+        if ($declarationId) {
+            $declaration = $declarationRepo->find($declarationId);
+            if ($declaration) {
+                // Set the necessary fields for the dossier
+                $dossier->setIdUser($declaration->getUser());
+                $dossier->setTotalImpot($this->calculertaxe($declaration));
+                $dossier->setTotalImpotPaye(0);
+                $dossier->setAnneeFiscale((new \DateTime($declaration->getDateDeclaration()))->format('Y'));
+                $dossier->setStatus('non payé');
+                $dossier->setMoyenPayement('');
+                $dossier->setIdDeclaration($declaration); 
+                $dossier->setDateCreation((new \DateTime())->format('Y-m-d'));
+            }
         }
-    }
-
-    $form = $this->createForm(DossierFiscaleType::class, $dossier);
-    $form->handleRequest($request);
-
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($dossier);
-        $entityManager->flush();
-
-        if ($declaration) {
-            $declaration->setIdDossier($dossier); 
-            
-            $entityManager->persist($declaration);
+    
+        $form = $this->createForm(DossierFiscaleType::class, $dossier);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($dossier);
             $entityManager->flush();
+    
+            if (isset($declaration)) {
+                $declaration->setIdDossier($dossier);
+                $entityManager->persist($declaration);
+                $entityManager->flush();
+            }
+    
+            // Send the email after creating the dossier
+            $email = (new Email())
+                ->from('mouradmissaoui76@gmail.com') 
+                ->to($dossier->getIdUser()->getEmail()) 
+                ->subject('Création de votre Dossier Fiscale')
+                ->embedFromPath('public/logo_civismart.png', 'logo_civismart')
+                ->html('
+                    <div style="background-color: #f6f6f6; padding: 20px; font-family: Arial, sans-serif;">
+                        <div style="max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <img src="cid:logo_civismart" alt="logo_civismart" style="max-width: 150px;">
+                            </div>
+                            <h2 style="color: #333;">Bonjour ' . htmlspecialchars($dossier->getIdUser()->getNom()) . ',</h2>
+                            <p style="font-size: 16px; color: #555;">
+                                Votre dossier fiscale pour l\'année ' . htmlspecialchars($dossier->getAnneeFiscale()) . ' a été créé avec succès.
+                            </p>
+                            <p style="font-size: 16px; color: #555;">
+                                Merci de votre confiance.
+                            </p>
+                            <div style="margin-top: 30px; text-align: center; font-size: 14px; color: #999;">
+                                © ' . date('Y') . ' Votre Société. Tous droits réservés.
+                            </div>
+                        </div>
+                    </div>
+                ');
+    
+            $mailer->send($email);
+    
+            return $this->redirectToRoute('admin_dossier_fiscale_index', [], Response::HTTP_SEE_OTHER);
         }
-        return $this->redirectToRoute('admin_dossier_fiscale_index', [], Response::HTTP_SEE_OTHER);
+    
+        return $this->render('/admin/dossier_fiscale/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
-
-    return $this->render('/admin/dossier_fiscale/new.html.twig', [
-        'form' => $form->createView(),
-    ]);
-}
+    
 
 
     #[Route('/{id}', name: 'app_dossier_fiscale_show', methods: ['GET'])]
