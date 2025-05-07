@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        {{ include('security/login_styles.css.twig') }}
+    </style>
+</head>
+<body>
+
+<div class="background">
+    <div class="shape"></div>
+    <div class="shape"></div>
+</div>
+
+<div class="logo-wrapper">
+  <img src="{{ asset('logo_civismart.png') }}" alt="Logo gauche" class="logo-left">
+  <img src="{{ asset('logo_civismart.png') }}" alt="Logo droite" class="logo-right">
+</div>
+
+<form method="post" action="{{ path('app_login') }}">
+   <div class="form-header">
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label == 'error' ? 'danger' : (label == 'success' ? 'success' : 'info') }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+        <h3>Login Here</h3>
+       <a href="{{ path('app_login_face_id') }}" id="face-id-btn" class="btn face-id-btn" onclick="startFaceIdLogin(event)">
+    <i id="face-id-icon" class="fa-solid fa-face-smile"></i> Connexion Face ID
+</a>
+
+
+
+    </div>
+    {% if error %}
+        <div style="color:red; text-align:center; margin-bottom: 10px;">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+        
+
+    <label for="email">Email</label>
+    <input type="email" id="inputEmail" name="email" placeholder="Email" value="{{ last_username }}">
+
+    <label for="password">Password</label>
+    <input type="password" id="inputPassword" name="password" placeholder="Password">
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <div class="g-recaptcha my-3" data-sitekey="6LcmBhsrAAAAAEFB0iFxH9Cn-RizkdLaPidLs1nI"></div>
+
+    <button type="submit">Log In</button>
+  <div class="form-full">
+      <p>Vous n'avez pas  un compte ? <a href="{{ path('app_register') }}" style="color: #00f;">Cree un compte </a>.</p>
+    </div>
+    <p class="text-center mt-3">
+  <a href="{{ path('app_forgot_password') }}" class="btn btn-link">🔑 Mot de passe oublié ?</a>
+</p>
+
+    <div class="social">
+        <div class="go"><i class="fab fa-google"></i> Google</div>
+        <div class="fb"><i class="fab fa-facebook"></i> Facebook</div>
+    </div>
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const emailInput = document.getElementById("inputEmail");
+    const passwordInput = document.getElementById("inputPassword");
+
+    form.addEventListener("submit", function (e) {
+      let valid = true;
+
+      // Nettoyer les anciens messages
+      const errors = document.querySelectorAll(".error-message");
+      errors.forEach(el => el.remove());
+
+      // Vérifier email
+      const emailValue = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailValue)) {
+        showError(emailInput, "Adresse email invalide");
+        valid = false;
+      }
+
+      // Vérifier mot de passe
+      const passwordValue = passwordInput.value.trim();
+      if (passwordValue.length < 6) {
+        showError(passwordInput, "Mot de passe trop court (min 6 caractères)");
+        valid = false;
+      }
+
+      if (!valid) {
+        e.preventDefault(); // empêcher la soumission du formulaire
+      }
+    });
+
+    function showError(inputElement, message) {
+      const div = document.createElement("div");
+      div.className = "error-message";
+      div.style.color = "red";
+      div.style.fontSize = "13px";
+      div.style.marginTop = "4px";
+      div.innerText = message;
+      inputElement.parentNode.insertBefore(div, inputElement.nextSibling);
+    }
+  });
+</script>
+<script>
+  window.addEventListener("load", function () {
+    document.body.classList.add("loaded");
+  });
+  window.addEventListener("load", function () {
+  document.body.classList.add("loaded");
+  document.querySelector("form")?.classList.add("fade-in");
+});
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const logos = document.querySelectorAll(".floating-logo");
+
+    logos.forEach(logo => {
+      const randomX = Math.floor(Math.random() * window.innerWidth);
+      const randomDelay = Math.random() * 5;
+
+      logo.style.left = `${randomX}px`;
+      logo.style.animationDelay = `${randomDelay}s`;
+    });
+  });
+
+ function startFaceIdLogin(event) {
+    const btn = document.getElementById('face-id-btn');
+    const icon = document.getElementById('face-id-icon');
+
+    event.preventDefault();
+
+    // Activer l'état actif
+    btn.classList.add('active');
+
+    icon.classList.remove('fa-face-smile');
+    icon.classList.add('fa-spinner', 'fa-spin');
+
+    setTimeout(() => {
+        window.location = btn.href;
+    }, 500);
+}
+
+</script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</body>
+</html>

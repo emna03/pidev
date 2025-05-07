@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<title>DossierFiscale</title>
+
+{% block body %}
+    <h1>DossierFiscale</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ dossier_fiscale.id }}</td>
+            </tr>
+            <tr>
+                <th>Annee_fiscale</th>
+                <td>{{ dossier_fiscale.anneeFiscale }}</td>
+            </tr>
+            <tr>
+                <th>Total_impot</th>
+                <td>{{ dossier_fiscale.totalImpot }}</td>
+            </tr>
+            <tr>
+                <th>Total_impot_paye</th>
+                <td>{{ dossier_fiscale.totalImpotPaye }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ dossier_fiscale.status }}</td>
+            </tr>
+            <tr>
+                <th>Date_creation</th>
+                <td>{{ dossier_fiscale.dateCreation }}</td>
+            </tr>
+            <tr>
+                <th>Moyen_payement</th>
+                <td>{{ dossier_fiscale.moyenPayement }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_dossier_fiscale_index') }}">back to list</a>
+
+    <a href="{{ path('app_dossier_fiscale_edit', {'id': dossier_fiscale.id}) }}">edit</a>
+
+    {{ include('dossier_fiscale/_delete_form.html.twig') }}
+{% endblock %}
