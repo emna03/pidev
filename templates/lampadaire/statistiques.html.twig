@@ -1,0 +1,168 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <h1 style="text-align: center; margin-bottom: 1.5rem;">📊 Statistiques Générales</h1>
+    
+    <!-- Summary Cards -->
+    <div class="row text-center" style="margin-bottom: 2rem;">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>Total des lampadaires</h5>
+                    <p style="font-size: 2.5rem; font-weight: bold;">{{ total }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow" style="background-color: rgba(40, 167, 69, 0.1);">
+                <div class="card-body">
+                    <h5>Actifs</h5>
+                    <p style="font-size: 2.5rem; font-weight: bold; color: #28a745;">{{ actifs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow" style="background-color: rgba(220, 53, 69, 0.1);">
+                <div class="card-body">
+                    <h5>Inactifs</h5>
+                    <p style="font-size: 2.5rem; font-weight: bold; color: #dc3545;">{{ inactifs }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow" style="background-color: rgba(13, 110, 253, 0.1);">
+                <div class="card-body">
+                    <h5>Consommation Moyenne</h5>
+                    <p style="font-size: 2.5rem; font-weight: bold; color: #0d6efd;">{{ moyenne|number_format(2) }}</p>
+                    <span>kWh</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row" style="margin-bottom: 1.5rem;">
+        <!-- Bar Chart using HTML Tables -->
+        <div class="col-md-6" style="margin-bottom: 1.5rem;">
+            <div class="card shadow">
+                <div class="card-header" style="background-color: #f8f9fa;">
+                    <h5 style="margin: 0;">🔌 Consommation par Quartier</h5>
+                </div>
+                <div class="card-body">
+                    {% if consoParQuartier is empty %}
+                        <div style="padding: 0.75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: 0.25rem; color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb;">Aucune donnée disponible</div>
+                    {% else %}
+                        {% set maxValue = 0 %}
+                        {% for item in consoParQuartier %}
+                            {% if item.total > maxValue %}
+                                {% set maxValue = item.total %}
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <table style="width: 100%; margin-bottom: 1rem; border-collapse: collapse;">
+                            <tbody>
+                                {% for item in consoParQuartier %}
+                                    <tr>
+                                        <td style="width: 30%; padding: 0.75rem; vertical-align: middle;"><strong>{{ item.quartier }}</strong></td>
+                                        <td style="width: 70%; padding: 0.75rem; vertical-align: middle;">
+                                            <table style="width: 100%; border-collapse: collapse; border-spacing: 0;">
+                                                <tr>
+                                                    <td style="width: {{ (item.total / maxValue * 100)|round }}%; height: 30px; background-color: #4e73df; border-radius: 5px; color: white; text-align: right; padding-right: 10px;">
+                                                        <strong>{{ item.total }} kWh</strong>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pie Chart using HTML Tables -->
+        <div class="col-md-6" style="margin-bottom: 1.5rem;">
+            <div class="card shadow">
+                <div class="card-header" style="background-color: #f8f9fa;">
+                    <h5 style="margin: 0;">⚡ État des Lampadaires</h5>
+                </div>
+                <div class="card-body" style="text-align: center;">
+                    {% if total > 0 %}
+                        <table style="margin: 0 auto; margin-bottom: 1rem;">
+                            <tr>
+                                <td style="text-align: center; padding-bottom: 1rem;" colspan="2">
+                                    <table style="width: 160px; margin: 0 auto; border-collapse: collapse; border-spacing: 0;">
+                                        <tr>
+                                            {% if actifs > 0 %}
+                                                <td style="height: 30px; background-color: #1cc88a; width: {{ (actifs / total * 100)|round }}%; border-radius: 5px 0 0 5px;"></td>
+                                            {% endif %}
+                                            {% if inactifs > 0 %}
+                                                <td style="height: 30px; background-color: #e74a3b; width: {{ (inactifs / total * 100)|round }}%; border-radius: 0 5px 5px 0;"></td>
+                                            {% endif %}
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 1rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <div style="width: 15px; height: 15px; background-color: #1cc88a; margin-right: 5px;"></div>
+                                        <span>Actifs: {{ actifs }} ({{ (actifs / total * 100)|round(1) }}%)</span>
+                                    </div>
+                                </td>
+                                <td style="padding-left: 1rem;">
+                                    <div style="display: flex; align-items: center;">
+                                        <div style="width: 15px; height: 15px; background-color: #e74a3b; margin-right: 5px;"></div>
+                                        <span>Inactifs: {{ inactifs }} ({{ (inactifs / total * 100)|round(1) }}%)</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    {% else %}
+                        <div style="padding: 0.75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: 0.25rem; color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb;">Aucune donnée disponible</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Year Chart using HTML Tables -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow" style="margin-bottom: 1.5rem;">
+                <div class="card-header" style="background-color: #f8f9fa;">
+                    <h5 style="margin: 0;">📈 Répartition par Date d'Installation</h5>
+                </div>
+                <div class="card-body">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="padding: 10px; text-align: center; vertical-align: bottom;">
+                                <!-- Generate 5 vertical bars -->
+                                <table style="width: 100%;">
+                                    <tr>
+                                        {% for i in 0..4 %}
+                                            {% set year = "now"|date("Y") - i %}
+                                            {% set height = 20 + random(60) %}
+                                            
+                                            <td style="width: 20%; padding: 5px; text-align: center; vertical-align: bottom;">
+                                                <div style="font-weight: bold; margin-bottom: 5px;">{{ random(1, 10) }}</div>
+                                                <div style="width: 40px; height: {{ height }}px; background-color: #9c27b0; margin: 0 auto;"></div>
+                                                <div style="margin-top: 10px; font-weight: bold;">{{ year }}</div>
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

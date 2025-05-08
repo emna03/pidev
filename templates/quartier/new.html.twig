@@ -1,0 +1,26 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Ajouter Quartier{% endblock %}
+
+{% block body %}
+<h1>Ajouter Quartier</h1>
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    
+    {# Fake input field with explanatory placeholder #}
+    <div class="form-group">
+        <label for="fake_nb_lamp">Number of Lamps</label>
+        <input type="text" 
+               id="fake_nb_lamp" 
+               class="form-control" 
+               placeholder="Number of lamps will be calculated automatically" 
+               readonly
+               style="background-color: #f8f9fa; cursor: not-allowed;" />
+    </div>
+    
+    <button class="btn btn-primary">Save</button>
+{{ form_end(form) }}
+
+<a href="{{ path('app_quartier_index') }}" class="btn btn-secondary mt-2">Back to list</a>
+{% endblock %}
