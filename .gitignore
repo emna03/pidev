@@ -23,6 +23,7 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+<<<<<<< HEAD
 # Ignorer le modèle ONNX trop lourd
 python-face-api/arcfaceresnet100-8.onnx
 
@@ -42,3 +43,5 @@ __pycache__/
 # Fichiers temporaires ou système
 .DS_Store
 Thumbs.db
+=======
+>>>>>>> emne_tache
