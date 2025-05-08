@@ -1,0 +1,563 @@
+{% extends 'baseBack.html.twig' %}
+
+{% block title %}Détails du Camion: Visualisation des Poubelles{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<style>
+    /* Map container styles */
+    .map-container {
+        height: 500px;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.15);
+    }
+    
+    /* Card styling */
+    .custom-card {
+        background-color: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.15rem 1.75rem rgba(58, 59, 69, 0.15);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+    
+    .card-header-custom {
+        padding: 1rem 1.5rem;
+        background: linear-gradient(90deg, rgb(98, 14, 176) 0%, rgb(124, 42, 247) 100%);
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .card-body-custom {
+        padding: 1.5rem;
+    }
+    
+    /* Table styling */
+    .detail-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .detail-table th,
+    .detail-table td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    
+    .detail-table th {
+        background-color: rgba(124, 42, 247, 0.05);
+        text-align: left;
+        width: 30%;
+        font-weight: 600;
+        color: #5a5c69;
+    }
+    
+    /* Status badges */
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 10rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .status-active {
+        background-color: rgba(28, 200, 138, 0.1);
+        color: #1cc88a;
+    }
+    
+    .status-inactive {
+        background-color: rgba(231, 74, 59, 0.1);
+        color: #e74a3b;
+    }
+    
+    .status-maintenance {
+        background-color: rgba(246, 194, 62, 0.1);
+        color: #f6c23e;
+    }
+    
+    /* Button styling */
+    .btn-custom {
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.35rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+    
+    .btn-primary-custom {
+        background: linear-gradient(90deg, rgb(98, 14, 176) 0%, rgb(124, 42, 247) 100%);
+        border: none;
+        color: #fff;
+    }
+    
+    .btn-primary-custom:hover {
+        box-shadow: 0 0.15rem 1.75rem rgba(124, 42, 247, 0.15);
+        transform: translateY(-2px);
+    }
+    
+    .btn-outline-custom {
+        background: transparent;
+        border: 1px solid rgb(124, 42, 247);
+        color: rgb(124, 42, 247);
+    }
+    
+    .btn-outline-custom:hover {
+        background: rgba(124, 42, 247, 0.05);
+    }
+    
+    /* Page title */
+    .content-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #5a5c69;
+        margin-bottom: 0.5rem;
+    }
+    
+    .page-subtitle {
+        color: #858796;
+        font-size: 0.875rem;
+    }
+    
+    /* Poubelle list */
+    .poubelle-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+    }
+    
+    .poubelle-card {
+        background-color: #fff;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        border-left: 4px solid rgb(124, 42, 247);
+        box-shadow: 0 0.15rem 0.5rem rgba(58, 59, 69, 0.1);
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    
+    .poubelle-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(58, 59, 69, 0.15);
+    }
+    
+    .poubelle-card.active {
+        border-left: 4px solid #e74a3b;
+    }
+    
+    .poubelle-card h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #5a5c69;
+    }
+    
+    .poubelle-location {
+        font-size: 0.875rem;
+        color: #858796;
+        margin-bottom: 0.75rem;
+    }
+    
+    .progress {
+        height: 8px;
+        border-radius: 0.25rem;
+        background-color: #eaecf4;
+        margin-bottom: 0.5rem;
+        overflow: hidden;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        border-radius: 0.25rem;
+    }
+    
+    .progress-info {
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .fill-green {
+        background-color: #1cc88a;
+    }
+    
+    .fill-yellow {
+        background-color: #f6c23e;
+    }
+    
+    .fill-red {
+        background-color: #e74a3b;
+    }
+    
+    /* Legend */
+    .map-legend {
+        background-color: #fff;
+        border-radius: 0.35rem;
+        padding: 1rem;
+        box-shadow: 0 0.15rem 0.5rem rgba(58, 59, 69, 0.1);
+        margin-top: 1rem;
+    }
+    
+    .legend-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #5a5c69;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        margin-right: 0.75rem;
+    }
+    
+    .legend-label {
+        font-size: 0.75rem;
+        color: #858796;
+    }
+    
+    /* Routing control styling */
+    .leaflet-routing-container {
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    }
+    
+    .leaflet-routing-alt {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    
+    .leaflet-routing-geocoders input {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+    
+    .leaflet-routing-geocoders button {
+        width: 100%;
+        padding: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="content-header">
+    <h1 class="page-title">Détails du Camion de Collecte</h1>
+    <p class="page-subtitle">Visualisez les informations du camion et les poubelles intelligentes associées</p>
+</div>
+
+<div class="row">
+    <!-- Camion details -->
+    <div class="col-lg-4">
+        <div class="custom-card">
+            <div class="card-header-custom">
+                <i class="bx bx-truck me-1"></i> Informations du Camion
+            </div>
+            <div class="card-body-custom">
+                <table class="detail-table">
+                    <tr>
+                        <th>ID</th>
+                        <td>{{ camion_collecte.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Modèle</th>
+                        <td>{{ camion_collecte.modele }}</td>
+                    </tr>
+                    <tr>
+                        <th>Immatriculation</th>
+                        <td>{{ camion_collecte.immatriculation }}</td>
+                    </tr>
+                    <tr>
+                        <th>Capacité Max</th>
+                        <td>{{ camion_collecte.capaciteMax }} kg</td>
+                    </tr>
+                    <tr>
+                        <th>Statut</th>
+                        <td>
+                            {% if camion_collecte.statut == 'Actif' %}
+                                <span class="status-badge status-active">{{ camion_collecte.statut }}</span>
+                            {% elseif camion_collecte.statut == 'En maintenance' %}
+                                <span class="status-badge status-maintenance">{{ camion_collecte.statut }}</span>
+                            {% else %}
+                                <span class="status-badge status-inactive">{{ camion_collecte.statut }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Zone ID</th>
+                        <td>{{ camion_collecte.zoneId }}</td>
+                    </tr>
+                </table>
+                
+                <div class="d-flex mt-4 gap-2">
+                    <a href="{{ path('app_camion_collecte_edit', {'id': camion_collecte.id}) }}" class="btn btn-custom btn-primary-custom">
+                        <i class="bx bx-edit-alt me-1"></i> Modifier
+                    </a>
+                    <a href="{{ path('app_camion_collecte_index') }}" class="btn btn-custom btn-outline-custom">
+                        <i class="bx bx-arrow-back me-1"></i> Retour à la liste
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Map -->
+    <div class="col-lg-8">
+        <div class="custom-card">
+            <div class="card-header-custom">
+                <i class="bx bx-map-alt me-1"></i> Carte des Poubelles Intelligentes
+            </div>
+            <div class="card-body-custom p-0">
+                <div id="map" class="map-container"></div>
+                
+                <div class="map-legend mx-3 mb-3">
+                    <h4 class="legend-title">Légende</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #1cc88a;"></div>
+                        <span class="legend-label">Niveau de remplissage faible (0-50%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #f6c23e;"></div>
+                        <span class="legend-label">Niveau de remplissage moyen (51-80%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #e74a3b;"></div>
+                        <span class="legend-label">Niveau de remplissage élevé (81-100%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #620eb0;"></div>
+                        <span class="legend-label">Route de collecte optimisée</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Poubelles list -->
+<div class="custom-card">
+    <div class="card-header-custom">
+        <i class="bx bx-trash me-1"></i> Poubelles Intelligentes dans la Zone
+    </div>
+    <div class="card-body-custom">
+        {% if poubelles|length > 0 %}
+            <div class="poubelle-grid" id="poubelle-list">
+                {% for poubelle in poubelles %}
+                    {% set fillLevelClass = 'fill-green' %}
+                    {% set fillLevelText = 'Niveau bas' %}
+                    
+                    {% if poubelle.niveauRemplissage > 80 %}
+                        {% set fillLevelClass = 'fill-red' %}
+                        {% set fillLevelText = 'Niveau critique' %}
+                    {% elseif poubelle.niveauRemplissage > 50 %}
+                        {% set fillLevelClass = 'fill-yellow' %}
+                        {% set fillLevelText = 'Niveau moyen' %}
+                    {% endif %}
+                    
+                    <div class="poubelle-card" data-id="{{ poubelle.id }}">
+                        <h4>
+                            <i class="bx bx-trash me-1"></i>
+                            {{ poubelle.typeDechets }}
+                        </h4>
+                        <p class="poubelle-location">
+                            <i class="bx bx-map-pin me-1"></i>
+                            {{ poubelle.localisation ?? 'Localisation inconnue' }}
+                        </p>
+                        <div class="progress">
+                            <div class="progress-bar {{ fillLevelClass }}" style="width: {{ poubelle.niveauRemplissage }}%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="progress-info">ID: {{ poubelle.id }}</span>
+                            <span class="progress-info {{ fillLevelClass }}-text">{{ poubelle.niveauRemplissage }}% ({{ fillLevelText }})</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bx bx-info-circle me-1"></i>
+                Aucune poubelle trouvée dans cette zone.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<script>
+// Initialize the map
+const map = L.map('map').setView([0, 0], 13);
+
+// Add a base layer (OpenStreetMap)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+// Custom marker icons based on fill level
+function getMarkerIcon(fillLevel) {
+    let color = '#1cc88a'; // Green for low level
+    
+    if (fillLevel > 80) {
+        color = '#e74a3b'; // Red for high level
+    } else if (fillLevel > 50) {
+        color = '#f6c23e'; // Yellow for medium level
+    }
+    
+    return L.divIcon({
+        className: 'custom-div-icon',
+        html: `
+            <div style="
+                background-color: ${color};
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                border: 2px solid white;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: 12px;
+            ">${fillLevel}%</div>
+        `,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+    });
+}
+
+// Initialize poubelles data from Twig
+const poubelles = [
+    {% for poubelle in poubelles %}
+    {
+        id: {{ poubelle.id }},
+        type_dechets: "{{ poubelle.typeDechets }}",
+        niveau_remplissage: {{ poubelle.niveauRemplissage }},
+        localisation: "{{ poubelle.localisation ?? 'Inconnue' }}",
+        latitude: {{ poubelle.latitude|default(0) }},
+        longitude: {{ poubelle.longitude|default(0) }}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+// Add markers for poubelles
+const markers = {};
+let routingControl = null;
+
+if (poubelles.length > 0) {
+    // Adjust map view to fit all markers
+    const bounds = [];
+    
+    // Sort poubelles by fill level (highest to lowest) to prioritize nearly full bins
+    const sortedPoubelles = [...poubelles].sort((a, b) => b.niveau_remplissage - a.niveau_remplissage);
+    
+    sortedPoubelles.forEach(poubelle => {
+        const marker = L.marker([poubelle.latitude, poubelle.longitude], {
+            icon: getMarkerIcon(poubelle.niveau_remplissage)
+        }).addTo(map);
+        
+        marker.bindPopup(`
+            <div style="min-width: 200px;">
+                <h6 style="margin-bottom: 8px; font-weight: 600; color: #5a5c69;">
+                    ${poubelle.type_dechets}
+                </h6>
+                <div style="font-size: 0.875rem; margin-bottom: 8px;">
+                    <strong>ID:</strong> ${poubelle.id}<br>
+                    <strong>Localisation:</strong> ${poubelle.localisation || 'Inconnue'}<br>
+                    <strong>Niveau:</strong> ${poubelle.niveau_remplissage}%
+                </div>
+                <div style="height: 6px; background-color: #eaecf4; border-radius: 3px; overflow: hidden;">
+                    <div style="height: 100%; width: ${poubelle.niveau_remplissage}%; background-color: ${
+                        poubelle.niveau_remplissage > 80 ? '#e74a3b' : 
+                        poubelle.niveau_remplissage > 50 ? '#f6c23e' : '#1cc88a'
+                    };"></div>
+                </div>
+            </div>
+        `);
+        
+        // Store marker reference for later use
+        markers[poubelle.id] = marker;
+        
+        bounds.push([poubelle.latitude, poubelle.longitude]);
+    });
+    
+    // Create waypoints for routing
+    const waypoints = sortedPoubelles.map(poubelle => 
+        L.latLng(poubelle.latitude, poubelle.longitude)
+    );
+    
+    // Remove any existing routing control
+    if (routingControl) {
+        map.removeControl(routingControl);
+    }
+    
+    // Add routing control with road routing
+    routingControl = L.Routing.control({
+        waypoints: waypoints,
+        routeWhileDragging: false,
+        show: false, // Hide the instructions panel
+        lineOptions: {
+            styles: [{
+                color: '#620eb0',
+                opacity: 0.8,
+                weight: 6
+            }]
+        },
+        createMarker: function() { return null; }, // Don't create default markers
+        router: L.Routing.osrmv1({
+            serviceUrl: 'https://router.project-osrm.org/route/v1',
+            profile: 'driving' // Use 'driving' for car routes (follows roads)
+        })
+    }).addTo(map);
+    
+    // Fit bounds to show all markers and route
+    if (bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [50, 50] });
+    }
+} else {
+    // If no poubelles, center the map on a default location (Paris)
+    map.setView([48.8566, 2.3522], 12);
+}
+
+// Add click event listeners to the poubelle items
+document.querySelectorAll('.poubelle-card').forEach(item => {
+    item.addEventListener('click', () => {
+        // Remove active class from all items
+        document.querySelectorAll('.poubelle-card').forEach(el => {
+            el.classList.remove('active');
+        });
+        
+        // Add active class to clicked item
+        item.classList.add('active');
+        
+        // Get the marker and open its popup
+        const poubelleId = parseInt(item.dataset.id);
+        const marker = markers[poubelleId];
+        if (marker) {
+            marker.openPopup();
+            map.setView(marker.getLatLng(), 15);
+        }
+    });
+});
+</script>
+{% endblock %}

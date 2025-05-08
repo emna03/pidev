@@ -1,0 +1,12 @@
+{# templates/camion_collecte/base.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des camions de collecte{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Gestion des camions de collecte</h1>
+        {% block camion_collecte_content %}{% endblock %}
+    </div>
+{% endblock %}
