@@ -41,7 +41,8 @@ Cette application illustre l'intégration entre **Symfony**, **Flask**, **Python
 - Python 3.8+
 - Flask
 - InsightFace (ArcFace)
-- Mistral 7B via Ollama
+- DeepSeekChat via Ollama
+- 
 
 ### 🧩 Autres outils
 
@@ -90,7 +91,7 @@ composer install
 Copier le fichier `.env` vers `.env.local` et modifier les infos de la base :
 
 ```dotenv
-DATABASE_URL="mysql://user:pass@127.0.0.1:3306/civismart"
+DATABASE_URL="mysql://user:pass@127.0.0.1:3306/symfony"
 ```
 
 ### 4. Créer la base de données
