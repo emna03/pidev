@@ -195,8 +195,9 @@ Les **topics** GitHub à utiliser pour ce dépôt :
 
 ## 🙌 Acknowledgments
 
-Ce projet a été réalisé sous la supervision de l’équipe pédagogique de **Esprit School of Engineering**, dans le cadre du module PIDEV 3A.  
-Un remerciement spécial à tous les enseignants qui nous ont accompagnés durant ce parcours.
+Ce projet a été réalisé sous la supervision de l’équipe pédagogique de **Esprit School of Engineering**, dans le cadre du module PIDEV 3A.
+Un remerciement spécial à Madame **Linda Ouerfelli**, notre tutrice, pour son accompagnement, ses conseils précieux et son soutien tout au long du projet.
+Merci également à tous les enseignants qui nous ont guidés pendant ce parcours.
 
 ---
 
