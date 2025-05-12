@@ -91,7 +91,7 @@ composer install
 Copier le fichier `.env` vers `.env.local` et modifier les infos de la base :
 
 ```dotenv
-DATABASE_URL="mysql://user:pass@127.0.0.1:3306/symfony"
+DATABASE_URL="mysql://root:@127.0.0.1:3306/symfony"
 ```
 
 ### 4. Créer la base de données
