@@ -1,54 +1,106 @@
-# 🏙️ CiviSmart - Smart City Platform
+# 🏙️ CiviSmart – Smart City Platform
 
-CiviSmart est une application Symfony moderne conçue pour améliorer la gestion urbaine grâce à l'intelligence artificielle, la reconnaissance faciale, les statistiques et une interface d’administration intuitive.
+## 📝 Overview
+
+Ce projet a été développé dans le cadre du cours **PIDEV 3A** à **Esprit School of Engineering**.  
+Il a pour objectif de proposer une plateforme intelligente pour la gestion urbaine en utilisant des technologies avancées telles que l’intelligence artificielle, la reconnaissance faciale, les statistiques interactives et un chatbot IA.  
+
+Cette application illustre l'intégration entre **Symfony**, **Flask**, **Python**, **JavaScript**, et des outils modernes pour l'administration de villes intelligentes.
 
 ---
 
-## 📦 Installation
+## ✨ Features
 
-### Prérequis
+- 🔐 Authentification sécurisée (email + mot de passe)
+- 🧠 Authentification par reconnaissance faciale (Face ID)
+- 💬 ChatBot IA (via Ollama/Mistral) spécialisé en Smart City
+- 📊 Statistiques interactives avec **ApexCharts**
+- 👤 Dashboard Admin (utilisateurs, statistiques)
+- 📧 Notifications par mail (activation, mot de passe oublié)
+- 📱 Interface responsive et moderne (Twig + Bootstrap)
+- 🧪 Tests unitaires Symfony avec PHPUnit
 
-- PHP 8.1+
-- Composer
-- Symfony CLI (recommandé)
-- Node.js & npm
+---
+
+## 🧰 Tech Stack
+
+### ⚙️ Backend
+
+- Symfony 6.4+
+- Doctrine ORM
+- PHPUnit
+
+### 🎨 Frontend
+
+- Twig
+- Bootstrap
+- ApexCharts
+
+### 🤖 IA & Reconnaissance Faciale
+
 - Python 3.8+
-- Git
-- MySQL ou autre base compatible Doctrine
+- Flask
+- InsightFace (ArcFace)
+- Mistral 7B via Ollama
 
-### Cloner le projet
+### 🧩 Autres outils
+
+- Composer
+- Symfony CLI
+- Node.js & npm
+- Git
+- MySQL
+- Ollama
+- Virtualenv (Python)
+
+---
+
+## 📁 Directory Structure
+
+```
+├── src/                  # Code Symfony
+├── templates/            # Fichiers Twig
+├── public/               # JS, CSS, images accessibles
+├── python-face-api/      # Scripts Python pour Face ID
+├── migrations/           # Migrations Doctrine
+├── .env                  # Config environnement local
+├── composer.json         # Dépendances PHP
+└── README.md
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Cloner le projet
 
 ```bash
 git clone https://github.com/emna03/pidev.git
 cd pidev
 ```
 
----
-
-## ⚙️ Backend Symfony
-
-### 1. Installer les dépendances PHP
+### 2. Installer les dépendances PHP
 
 ```bash
 composer install
 ```
 
-### 2. Configurer `.env`
+### 3. Configuration de l’environnement
 
-Copier `.env` → `.env.local` et mettre à jour votre connexion base de données :
+Copier le fichier `.env` vers `.env.local` et modifier les infos de la base :
 
 ```dotenv
 DATABASE_URL="mysql://user:pass@127.0.0.1:3306/civismart"
 ```
 
-### 3. Créer la base & migrations
+### 4. Créer la base de données
 
 ```bash
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 ```
 
-### 4. Lancer le serveur Symfony
+### 5. Lancer le serveur Symfony
 
 ```bash
 symfony serve
@@ -56,41 +108,29 @@ symfony serve
 
 ---
 
-## 🎥 Reconnaissance Faciale (Face ID)
+## 👁️ Reconnaissance Faciale (Face ID)
 
-### 1. Aller dans le dossier Python
+### Configuration
 
 ```bash
 cd python-face-api
-```
-
-### 2. Créer l'environnement virtuel
-
-```bash
 python -m venv venv
-venv\Scripts\activate   # Sur Windows
-source venv/bin/activate  # Sur Mac/Linux
-```
-
-### 3. Installer les dépendances Python
-
-```bash
+source venv/bin/activate  # ou venv\Scripts\activate sur Windows
 pip install -r requirements.txt
 ```
 
-### 4. Télécharger le modèle ArcFace
+### Télécharger le modèle ArcFace
 
-> Le fichier n’est pas inclus dans ce dépôt.
+> Non inclus dans le dépôt – à télécharger manuellement :
 
-- Télécharger le modèle depuis :  
-  [Télécharger arcfaceresnet100-8.onnx](https://github.com/deepinsight/insightface)
+[https://github.com/deepinsight/insightface](https://github.com/deepinsight/insightface)
 
-- Placer dans :
-  ```
-  ProjetPi/python-face-api/arcfaceresnet100-8.onnx
-  ```
+Déposer dans :
+```
+ProjetPi/python-face-api/arcfaceresnet100-8.onnx
+```
 
-### 5. Lancer le service Flask
+### Lancer le serveur Flask
 
 ```bash
 python app.py
@@ -98,31 +138,32 @@ python app.py
 
 ---
 
-## 🤖 ChatBot SmartCity (Mistral via Ollama)
+## 💬 ChatBot SmartCity (Mistral)
 
-### 1. Installer Ollama
+### 1. Télécharger Ollama
 
 [https://ollama.com/download](https://ollama.com/download)
 
-### 2. Lancer le modèle :
+### 2. Lancer le modèle Mistral
 
 ```bash
 ollama run mistral:7b-instruct
 ```
 
-> Il se lancera automatiquement si vous utilisez la route `/chat/send`.
+> Le modèle s’exécutera automatiquement via `/chat/send`.
 
 ---
 
-## 📊 Statistiques utilisateurs
+## 📊 Statistiques
 
-Accessible depuis `/admin/statistiques`, l’admin peut voir :
+Disponible à l’adresse `/admin/statistiques`.  
+Permet de visualiser :
 
 - Répartition par rôles
 - Utilisateurs actifs vs inactifs
-- Inscriptions par mois
+- Nombre d’inscriptions par mois
 
-Utilise **ApexCharts** pour un rendu interactif et moderne.
+> Rendu graphique dynamique via ApexCharts.
 
 ---
 
@@ -134,34 +175,31 @@ php bin/phpunit
 
 ---
 
-## 🧠 Fonctionnalités principales
+## 🧠 Topics
 
-- Authentification Symfony (email + mot de passe)
-- Authentification par reconnaissance faciale (Face ID)
-- ChatBot IA spécialisé Smart City
-- Panneau Admin (users, statistiques)
-- Notifications mail (activation, mot de passe oublié)
-- UI responsive et moderne
+Les **topics** GitHub à utiliser pour ce dépôt :
 
----
-
-## 📁 Structure principale
-
-```
-├── src/                  # Code Symfony
-├── templates/            # Fichiers Twig
-├── public/               # Fichiers accessibles (JS, CSS, img)
-├── python-face-api/      # Scripts Python (face ID)
-├── migrations/           # Migrations Doctrine
-├── .env                  # Config env
-├── composer.json         # Dépendances PHP
-└── README.md
-```
+- `symfony`
+- `python`
+- `flask`
+- `machine-learning`
+- `web-development`
+- `smart-city`
+- `facial-recognition`
+- `ai-chatbot`
+- `data-visualization`
+- `esprit-school-of-engineering`
 
 ---
 
-## 🧑‍💻 Auteur
+## 🙌 Acknowledgments
 
-**CiviSmart - Projet PIDEV**
+Ce projet a été réalisé sous la supervision de l’équipe pédagogique de **Esprit School of Engineering**, dans le cadre du module PIDEV 3A.  
+Un remerciement spécial à tous les enseignants qui nous ont accompagnés durant ce parcours.
 
-> Développé par [Chemlali Ismail & équipe] 🚀
+---
+
+## 👥 Équipe de développement
+
+Développé par :
+**Anas Souissi, Ismail Chaabane, Chemlali Ismail, Mourad Missaoui, Siwar Slimi, Emna Missaoui** 🚀
